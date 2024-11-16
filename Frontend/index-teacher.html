@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Teacher</title>
+</head>
+<body>
+<div class="principal-container">
+    <div class="header-container">
+        <header>
+            <h1>Bienvenido</h1>
+        </header>
+    </div>
+    <div>
+        <aside>
+            <nav class="nav-user">
+                <ul>
+                    <li><button class="btn-nav" id="btn-regresar">Regresar</button></li>
+                    <li><button class="btn-nav" id="btn-perfil">Perfil</button></li>
+                    <li><button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button></li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+    <div class="alinear-y">
+        <main>
+            <div>
+                <div>
+                    <div class="alinear-x menu">
+                        <button class="icon-button"><input type="checkbox"></button>
+                        <button class="icon-button">Modificar</button>
+                        <button class="icon-button">Eliminar</button>
+                        <div>
+                            <input class="search-bar" type="text" placeholder="Buscar">
+                        </div>
+                    </div>
+                    <div class="alinear-y">
+                        <div class="alinear-x btn-nav-container">
+                            <button class="btn-nav" id="btn-bloques">Bloques</button>
+                            <button class="btn-nav" id="btn-clases">Clases</button>
+                            <button class="btn-nav" id="btn-asignacion">Asignación</button>
+                        </div>
+                        <div>
+                            <!-- Generar esto a través de JS -->
+                            <table class="content-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Clases</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha</th>
+                                        <th>Cantidad Alumnos</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Contenido generado dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

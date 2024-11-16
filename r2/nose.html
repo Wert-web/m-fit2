@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa de Mecanografía</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #textToType {
+            font-size: 24px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 80%;
+            display: inline-block;
+        }
+        #userInput {
+            font-size: 24px;
+            padding: 10px;
+            width: 80%;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Prueba de Mecanografía</h1>
+    <div id="textToType">Escribe este texto para practicar tu mecanografía.</div>
+    <input type="text" id="userInput" placeholder="Escribe aquí..." autofocus />
+    
+    <div id="stats">
+        <p>Palabras por minuto: <span id="wpm">0</span></p>
+        <p>Tiempo restante: <span id="timeRemaining">30</span> segundos</p>
+        <p>Palabras erróneas: <span id="wrongWords">0</span></p>
+        <p>Total de palabras: <span id="totalWords">0</span></p>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const textToType = document.getElementById('textToType').innerText;
+        const userInput = document.getElementById('userInput');
+        const result = document.getElementById('result');
+        const wpmDisplay = document.getElementById('wpm');
+        const timeRemainingDisplay = document.getElementById('timeRemaining');
+        const wrongWordsDisplay = document.getElementById('wrongWords');
+        const totalWordsDisplay = document.getElementById('totalWords');
+
+        let startTime, timer, totalWords = 0, wrongWords = 0, timeRemaining = 30;
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeRemaining--;
+                timeRemainingDisplay.innerText = timeRemaining;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        function endTest() {
+            userInput.disabled = true; // Desactiva el input
+            const timeTaken = (30 - timeRemaining); // Tiempo utilizado
+            const wpm = Math.floor((totalWords / timeTaken) * 60);
+            wpmDisplay.innerText = wpm;
+            result.innerHTML = `¡Prueba finalizada!<br>Palabras por minuto: ${wpm}<br>Palabras erróneas: ${wrongWords}<br>Total de palabras: ${totalWords}`;
+        }
+
+        userInput.addEventListener('focus', () => {
+            if (!startTime) {
+                startTime = new Date();
+                startTimer();
+            }
+        });
+
+        userInput.addEventListener('input', () => {
+            const typedText = userInput.value.trim();
+            
+            // Contar palabras
+            totalWords = typedText.split(/\s+/).filter(word => word).length;
+            totalWordsDisplay.innerText = totalWords;
+
+            // Comprobar errores
+            if (typedText !== textToType.substring(0, typedText.length)) {
+                wrongWords++;
+                wrongWordsDisplay.innerText = wrongWords;
+            }
+
+            if (typedText === textToType) {
+                endTest();
+            }
+        });
+    </script>
+
+</body>
+</html>

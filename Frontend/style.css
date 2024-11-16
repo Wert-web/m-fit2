@@ -1,0 +1,171 @@
+:root{
+    --clr-gray: ;
+    --clr-cofee: ;
+    --clr-soft-cofee: ;
+    --clr-dark-cofee:  ;
+    --clr-skin: ;
+}
+
+body{
+    margin: 0;
+}
+
+.principal-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.header-container{
+    background-color: #974a97;
+    color: white;
+}
+
+.alinear-y{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.alinear-x{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.menu{
+    background-color: #974a97;
+    padding: 1em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+}
+
+.search-bar{
+    background-color: #555;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    flex-grow: 1;
+}
+
+.search-bar:focus {
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.5); /* Agrega un efecto de sombra */
+    background-color: #f0f8ff; /* Cambia el color de fondo (opcional) */
+}
+
+.nav-user{
+    justify-content: center;
+    ul{list-style: none;}
+}
+
+.table-check .table-btn{
+ justify-content: center;
+ align-content: center;
+}
+
+
+/* Contenedor de los botones */
+.btn-nav-container {
+    display: flex;           
+    gap: 1em;                 
+    width: 100%;               
+}
+
+/* Botones */
+.btn-nav {
+    background-color: white;
+    border: none;            
+    padding: 1em;
+    text-transform: capitalize;
+    flex-grow: 1;              /* Hace que el botón ocupe el espacio restante disponible */
+    box-sizing: border-box;    /* Asegura que el padding no afecte el ancho total */
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    color: #666;  /* Color gris */
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 5px;
+    transition: color 0.2s;
+}
+
+.btn-logout{
+    background-color: rgb(212, 16, 16);
+    color: white;
+    border: none; 
+    border-top-right-radius: 1rem;           
+    padding: 1em;
+    text-transform: capitalize;
+    box-sizing: border-box;  
+}
+
+/* Estilos de hover */
+.btn-nav:hover {
+    background-color: gray;
+    border: none;
+    cursor: pointer;
+    color: blue;
+}
+
+
+.icon-button:hover {
+    color: #333; /* Oscurece el color al pasar el cursor */
+}
+
+.icon-button:focus {
+    outline: none;
+}
+
+
+.table-container{
+    width: 80%;
+    max-width: 900px;
+    margin: 20px;
+    background-color: var(--clr-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.content-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.content-table thead{
+    background-color: #f1f3f4;
+}
+
+.content-table th, .content-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.content-table th {
+    font-weight: bold;
+    color: #555;
+}
+
+.content-table tr:hover {
+    background-color: #f1f3f4;
+    cursor: pointer;
+}
+
+.content-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.content-table td:nth-child(1) {
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+.content-table td:nth-child(3) {
+    text-align: right;
+    color: #888;
+}
+

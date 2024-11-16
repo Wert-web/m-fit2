@@ -1,0 +1,196 @@
+
+:root{
+    --clr-main: #3B1C32;
+    --clr-main-dark: #1A1A1D;
+    --clr-white: white;
+    --clr-softligth: #6A1E55;
+    --clr-ligth: #A64D79 ;
+
+}
+
+@font-face {
+    font-family: general;
+    src: url(./Assets/fonts/ComicNeue-Regular.ttf);
+    font-weight: normal;
+    font-size: normal;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: general, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background-color:var(--clr-main-dark);
+    margin: 0;
+}
+
+
+body {
+    display: flex;
+}
+
+
+/* Sidebar */
+#sidebar {
+    width: 300px; 
+    background-color: var(--clr-softligth);
+    color: var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+}
+
+.nav-container a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:var(--clr-main);
+    color: white;
+    text-decoration: none;
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.5rem;
+}
+
+.main-wraper {
+    margin-left: 300px; 
+    padding: 20px;
+    width: calc(100% - 300px);
+}
+ 
+/*revisar esto mas tarde*/
+
+.estudent-page{
+    display: flex;
+    flex-direction: row;
+    .principal-container{
+        justify-content: center;
+        align-content: center;
+    }
+}
+
+/* Contenedores*/
+.principal-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.workspace-container{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    gap: 1rem;
+}
+
+
+/* Áreas */
+.left-area {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.left-area button {
+    background-color: var(--clr-softligth);;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.vertical-area{
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    gap: 1rem;
+}
+
+
+.area-display{
+    align-content: center;
+    padding: 1rem;
+    max-width: auto;
+}
+
+.area-display, .area-instruct, .left-area, .rigth-area{
+    background-color: var(--clr-main);
+}
+
+.area-instruct{
+    display: flex;
+    flex-direction: row;
+    img {
+        width: 400px; /* Tamaño ajustado para dos imágenes */
+        border-radius: 5px;
+        padding: 1rem;
+        padding: 0.5rem;
+        background-color: var(--clr-softligth);
+    }
+}
+
+.rigth-area {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.rigth-area p {
+    font-size: 1rem;
+    color: var(--clr-white);
+    margin: 5px 0;
+}
+
+.rigth-area button {
+    background-color: var(--clr-softligth);
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.rigth-area button :hover {
+    background-color: var(--clr-ligth);
+    color: black;
+    cursor: pointer;
+}
+
+/* Estilo para resaltar la palabra actual */
+.area-display span.highlight {
+    background-color: var(--clr-softligth);
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Estilo del campo de entrada de texto */
+.vertical-area input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    border: 2px solid #4d004d;
+    border-radius: 8px;
+    background-color: var(--clr-main);
+    color: var(--clr-white);
+}
