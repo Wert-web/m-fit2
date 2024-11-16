@@ -1,15 +1,28 @@
 :root{
-    --clr-gray: ;
-    --clr-cofee: ;
-    --clr-soft-cofee: ;
-    --clr-dark-cofee:  ;
-    --clr-skin: ;
+    --clr-1: ;
+    --clr-2: ;
+    --clr-3: ;
+    --clr-4:  ;
+    --clr-5: ;
 }
 
 body{
     margin: 0;
 }
 
+/* Contenedores*/
+.btn-nav-container {
+    display: flex;           
+    gap: 1em;                 
+    width: 100%;               
+}
+
+.asig-container-btn{
+    background-color: #555;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    
+}
 .principal-container{
     display: flex;
     flex-direction: column;
@@ -20,6 +33,7 @@ body{
     color: white;
 }
 
+/*Estilos re-usables*/
 .alinear-y{
     display: flex;
     flex-direction: column;
@@ -31,6 +45,17 @@ body{
     flex-direction: row;
     justify-content: center;
     gap: 0.5em;
+}
+
+.style-list{
+    list-style: none;
+    padding: 1em;
+}
+
+.img-hands{
+    width: 200px;
+    height: 200px;
+    border-radius: 1em;
 }
 
 .menu{
@@ -63,13 +88,47 @@ body{
  align-content: center;
 }
 
-
-/* Contenedor de los botones */
-.btn-nav-container {
-    display: flex;           
-    gap: 1em;                 
-    width: 100%;               
+.side-bar {
+    width: 300px; 
+    background-color: aqua;
+    color: var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
 }
+
+.links-students{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color:black;
+    color: white;
+    text-decoration: none;
+    padding: 1em;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.5rem;
+}
+
+/*Areas */
+.display-instruct-area{
+    background-color: #666;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 1em;
+}
+
 
 /* Botones */
 .btn-nav {
