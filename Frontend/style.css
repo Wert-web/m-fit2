@@ -31,6 +31,7 @@ body{
 .header-container{
     background-color: #974a97;
     color: white;
+    position: sticky;
 }
 
 /*Estilos re-usables*/
@@ -52,6 +53,30 @@ body{
     padding: 1em;
 }
 
+#toggleButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#toggleButton:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none; /* Eliminar viñetas */
+    padding: 0; /* Eliminar padding */
+}
+
+li {
+    padding: 5px 0; /* Espaciado entre elementos */
+}
+
+/*estilos que solo se usan 1 vez*/
+
 .img-hands{
     width: 200px;
     height: 200px;
@@ -63,6 +88,7 @@ body{
     padding: 1em;
     border-top-left-radius: 1em;
     border-top-right-radius: 1em;
+    width: 100%;
 }
 
 .search-bar{
@@ -129,6 +155,24 @@ body{
     padding: 1em;
 }
 
+
+.display-text-area{
+    background-color: #0056b3;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+    justify-content: center;
+    padding: 1em;
+}
+
+
+
+.input-ingres-text{
+    width: 100%;
+    border: none;
+    background-color: white;
+    border-radius: 1em;
+    padding: 1em;
+}
 
 /* Botones */
 .btn-nav {

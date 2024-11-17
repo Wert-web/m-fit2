@@ -13,18 +13,19 @@
             <h1>Bienvenido</h1>
         </header>
     </div>
-    <div>
+    <div class="" >
         <aside>
             <nav class="nav-user">
                 <ul>
                     <li><button class="btn-nav" id="btn-regresar">Regresar</button></li>
                     <li><button class="btn-nav" id="btn-perfil">Perfil</button></li>
+                    <li><button class="btn-nav" >añadir maestro</button></li>
                     <li><button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button></li>
                 </ul>
             </nav>
         </aside>
     </div>
-    <div class="alinear-y">
+    <div class="alinear-x">
         <main>
             <div>
                 <div>
@@ -32,6 +33,14 @@
                         <button class="icon-button"><input type="checkbox"></button>
                         <button class="icon-button">Modificar</button>
                         <button class="icon-button">Eliminar</button>
+                        <!--
+                        <button id="toggle-btn">crear</button>
+                        <ul id="itemlist" style="display: none;" >
+                            <li><button class="" >clases</button></li>
+                            <li><button class="" >ver progreso</button></li>
+                            <li><button class="" >cerar sesion</button></li>
+                        </ul>
+                        -->
                         <div>
                             <input class="search-bar" type="text" placeholder="Buscar">
                         </div>
@@ -55,16 +64,17 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="myTable" >
                                     <!-- Contenido generado dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
-                        <div></div>
                     </div>
-                </div>
             </div>
         </main>
+        <form>
+            <img src="Screenshot 2024-11-16 135926.png" >
+        </form>
     </div>
 </div>
 <script src="script.js"></script>
