@@ -8,31 +8,31 @@
 </head>
 <body>
     <div class="principal-container" >
-        <div>
+        <div class="main-content-wrapper" > <!--spearar divs-->
             <header class="header-container" >
                 <h1>Pagina Principal</h1>
                 <p>bienvenido!</p>
                 <img src="" alt="logo" >
             </header>
-        </div>
-        <div class="side-bar" >
-            <aside>
-                <nav>
-                    <div>
-                        <button id="toggle-btn" >=</button>
-                        <ul id="itemlist" style="display: none;" >
-                            <li><button class="" >clases</button></li>
-                            <li><button class="" >ver progreso</button></li>
-                            <li><button class="" >cerar sesion</button></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <a class="links-students"  href="block.html"><span>Bloques</span></a>
-                        <a class="links-students" href="perfil.html"><span>Perfil</span></a>
-                    </div>
-                </nav>
-            </aside>
+            <div class="side-bar" >
+                <aside>
+                    <nav>
+                        <div>
+                            <button id="toggle-btn" >=</button>
+                            <ul id="itemlist" style="display: none;" >
+                                <li><button class="" >clases</button></li>
+                                <li><button class="" >ver progreso</button></li>
+                                <li><button class="" >cerar sesion</button></li>
+                            </ul>
+                        </div>
+    
+                        <div>
+                            <a class="links-students"  href="block.html"><span>Bloques</span></a>
+                            <a class="links-students" href="perfil.html"><span>Perfil</span></a>
+                        </div>
+                    </nav>
+                </aside>
+            </div>
         </div>
         <div>
             <main>
@@ -55,14 +55,22 @@
                         <div>
                             <div class="display-instruct-area" >
                                 <img class="img-hands" src="Screenshot 2024-11-16 135926.png" >
-                                <p>La letra sigiente coresponde a:</p>
+                                <img style="width: 200px; height: 200px; image-rendering: pixelated;" src="../assets/images/tile_0395.png" >
                                 <img  class="img-hands"  src="Screenshot 2024-11-16 135926.png" >
                             </div>
                         </div>
                     </div>
-                    <div>
-
+                    <div class="alinear-y stats-display" >
+                        <p>Plabras faltantes</p>
+                        <p>Palabras por minuto</p>
+                        <p>Palabras Erronias</p>
+                        <p>tiempo</p>
+                        <div>
+                            <button>Pausar</button>
+                            <button>Reiniciar</button>
+                        </div>
                     </div>
+
                 </div>
             </main>
         </div>

@@ -19,7 +19,7 @@
                 <ul>
                     <li><button class="btn-nav" id="btn-regresar">Regresar</button></li>
                     <li><button class="btn-nav" id="btn-perfil">Perfil</button></li>
-                    <li><button class="btn-nav" >añadir maestro</button></li>
+                    <li><button class="btn-nav">añadir maestro</button></li>
                     <li><button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button></li>
                 </ul>
             </nav>
@@ -30,17 +30,10 @@
             <div>
                 <div>
                     <div class="alinear-x menu">
-                        <button class="icon-button"><input type="checkbox"></button>
+                        <button class="icon-button"><input type="checkbox" id="select-all"></button>
                         <button class="icon-button">Modificar</button>
                         <button class="icon-button">Eliminar</button>
-                        <!--
-                        <button id="toggle-btn">crear</button>
-                        <ul id="itemlist" style="display: none;" >
-                            <li><button class="" >clases</button></li>
-                            <li><button class="" >ver progreso</button></li>
-                            <li><button class="" >cerar sesion</button></li>
-                        </ul>
-                        -->
+                        <button class="icon-button" id="btn-crear">Crear</button> <!-- Botón funcional -->
                         <div>
                             <input class="search-bar" type="text" placeholder="Buscar">
                         </div>
@@ -60,7 +53,6 @@
                                         <th>Clases</th>
                                         <th>Descripción</th>
                                         <th>Fecha</th>
-                                        <th>Cantidad Alumnos</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -70,13 +62,31 @@
                             </table>
                         </div>
                     </div>
+                </div>
             </div>
         </main>
-        <form>
-            <img src="Screenshot 2024-11-16 135926.png" >
+    </div>
+</div>
+
+<!-- Modal para formulario -->
+<div id="modal-crear" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <form class="register-form">
+            <h3>Crear Clase:</h3>
+            <label>Nombre de la Clase:</label>
+            <input type="text" placeholder="Añadir un nombre" />
+            <label>Descripción:</label>
+            <textarea type="text" placeholder="Añadir una descripción"></textarea>
+            <div>
+                <label>Visibilidad: </label>
+                <input type="checkbox"/>
+            </div>
+            <button>Enviar</button>
         </form>
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
