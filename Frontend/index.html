@@ -3,41 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" >
+    <link rel="stylesheet" href="style.css">
     <title>Pagina principal</title>
 </head>
 <body>
-    <div class="principal-container" >
-        <div class="main-content-wrapper" > <!--spearar divs-->
-            <header class="header-container" >
-                <h1>Pagina Principal</h1>
-                <p>bienvenido!</p>
-                <img src="" alt="logo" >
-            </header>
-            <div class="side-bar" >
+    <div class="principal-container">
+        <div class="main-content-wrapper">
+            <div class="side-bar">
                 <aside>
                     <nav>
                         <div>
-                            <button id="toggle-btn" >=</button>
-                            <ul id="itemlist" style="display: none;" >
-                                <li><button class="" >clases</button></li>
-                                <li><button class="" >ver progreso</button></li>
-                                <li><button class="" >cerar sesion</button></li>
+                            <button id="toggleButton">=</button>
+                            <ul id="itemlist" style="display: none;">
+                                <li><button>Clases</button></li>
+                                <li><button>Ver Progreso</button></li>
+                                <li><button>Cerrar Sesión</button></li>
                             </ul>
                         </div>
-    
+
                         <div>
-                            <a class="links-students"  href="block.html"><span>Bloques</span></a>
+                            <a class="links-students" href="block.html"><span>Bloques</span></a>
                             <a class="links-students" href="perfil.html"><span>Perfil</span></a>
+                            <a class="links-students" href="#"><span>Regresar</span></a>
                         </div>
                     </nav>
                 </aside>
             </div>
-        </div>
-        <div>
+        <div >
             <main>
-                <div  class="alinear-x " >
-                    <div class="asig-container-btn" >
+                <div class="alinear-x" >
+                    <div class="asig-container-btn alinear-y" >
                         <nav>
                             <ul class="style-list" >
                                 <li><button class="" >asignacion 1</button></li>
@@ -45,17 +40,19 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="alinear-y" >
-                         <div class="display-text-area" >
-                            <img src="Screenshot 2024-11-16 135926.png" >
-                            <div class="alinear-y" >
-                                <input  class="input-ingres-text" type="text" placeholder="Ingresa el texto de la practica" >
+                    <div class="alinear-y vertical-area ">
+                        <div class="display-text-area">
+                            <div class="texts-display" >
+                                <!--Aqui va el texto cargado del js-->
+                            </div>
+                            <div class="alinear-y">
+                                <input class="input-ingres-text" type="text" placeholder="Ingresa el texto de la práctica">
                             </div>
                         </div>
                         <div>
                             <div class="display-instruct-area" >
                                 <img class="img-hands" src="Screenshot 2024-11-16 135926.png" >
-                                <img style="width: 200px; height: 200px; image-rendering: pixelated;" src="../assets/images/tile_0395.png" >
+                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
                                 <img  class="img-hands"  src="Screenshot 2024-11-16 135926.png" >
                             </div>
                         </div>
@@ -75,6 +72,6 @@
             </main>
         </div>
     </div>
-    <script src="script.js" ></script>
+    <script src="function.js" ></script>
 </body>
 </html>

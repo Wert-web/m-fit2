@@ -1,15 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Elementos de la interfaz
-    const textDisplay = document.querySelector(".area-display"); // Contenedor de texto completo
-    const inputArea = document.createElement("input"); // Campo de entrada de texto
-    const wpmDisplay = document.querySelector(".rigth-area p:nth-child(1)");
-    const timeDisplay = document.querySelector(".rigth-area p:nth-child(2)");
-    const errorsDisplay = document.querySelector(".rigth-area p:nth-child(3)");
-    const totalDisplay = document.querySelector(".rigth-area p:nth-child(4)");
-    const pauseButton = document.querySelector(".rigth-area button:nth-child(5)");
-    const endButton = document.querySelector(".rigth-area button:nth-child(6)");
-    document.querySelector(".vertical-area").appendChild(inputArea);
-    inputArea.focus();
+    const textDisplay = document.querySelector(".texts-display"); // Contenedor de texto completo
+    const inputArea = document.querySelector(".input-ingres-text"); // Campo de entrada de texto
+    const wpmDisplay = document.querySelector(".stats-display p:nth-child(2)"); // Palabras por minuto
+    const timeDisplay = document.querySelector(".stats-display p:nth-child(4)"); // Tiempo restante
+    const errorsDisplay = document.querySelector(".stats-display p:nth-child(3)"); // Palabras erróneas
+    const totalDisplay = document.querySelector(".stats-display p:nth-child(1)"); // Total de palabras
+    const pauseButton = document.querySelector(".stats-display button:nth-child(1)"); // Botón Pausar
+    const endButton = document.querySelector(".stats-display button:nth-child(2)"); // Botón Reiniciar
 
     // Variables para la práctica de mecanografía
     let words = [];
@@ -26,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("text.txt")
             .then(response => response.text())
             .then(text => {
-                words = text.split(" "); // Separar palabras por espacios
+                words = text.split(/\s+/); // Separar palabras por espacios y saltos de línea
                 displayFullText();
                 startPractice();
             })
@@ -54,21 +52,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentWord = words[currentWordIndex];
 
         if (inputText === currentWord) {
-            document.querySelectorAll(".area-display span")[currentWordIndex].classList.remove("highlight");
+            document.querySelectorAll(".display-text-area span")[currentWordIndex].classList.remove("highlight");
             currentWordIndex++;
             totalWords++;
 
             if (currentWordIndex < words.length) {
-                document.querySelectorAll(".area-display span")[currentWordIndex].classList.add("highlight");
+                document.querySelectorAll(".display-text-area span")[currentWordIndex].classList.add("highlight");
             } else {
-                // Si se llega al final del texto, detener el temporizador y mostrar un mensaje
                 clearInterval(timer);
                 inputArea.disabled = true;
                 alert("¡Has completado el texto!");
-                return; // Salir para evitar errores al intentar acceder a palabras fuera del rango
+                return; 
             }
 
-            inputArea.value = ""; // Limpiar el campo de entrada
+            inputArea.value = ""; 
         } else if (!currentWord.startsWith(inputText)) {
             errors++;
         }
@@ -124,6 +121,16 @@ document.addEventListener("DOMContentLoaded", function () {
         displayFullText();
     }
 
-    // Cargar el texto y empezar práctica
-    loadTextFromFile();
+   // Cargar el texto y empezar práctica
+   loadTextFromFile();
+
+   const toggleButton = document.getElementById('toggleButton');
+
+   toggleButton?.addEventListener('click', function () {
+    if (itemList.style.display === 'none' || itemList.style.display === '') {
+        itemList.style.display = 'block';
+    } else {
+        itemList.style.display = 'none';
+    }
+});
 });

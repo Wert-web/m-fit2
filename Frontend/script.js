@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Elementos del DOM
     const tableBody = document.getElementById("myTable");
     const btnBloques = document.getElementById("btn-bloques");
     const btnClases = document.getElementById("btn-clases");
     const btnAsignacion = document.getElementById("btn-asignacion");
     const selectAllCheckbox = document.getElementById("select-all");
+    const itemList = document.getElementById('itemlist');
+    const btnCrear = document.getElementById('btn-crear'); // Botón para abrir el modal
 
-    // Datos dinámicos para cada categoría
+    if (!tableBody) {
+        console.error("El elemento con id 'myTable' no existe.");
+        return;
+    }
+
     const data = {
         clases: [
             { firstContent: "Matemáticas", secondContent: "Álgebra básica", teirdContent: "2024-01-10", fiveContent: "Detalles" },
@@ -25,9 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ]
     };
 
-    // Función para construir la tabla
     function buildTable(data) {
-        let rows = ""; // Limpiar contenido previo
+        let rows = "";
         for (let i = 0; i < data.length; i++) {
             rows += `
                 <tr>
@@ -38,30 +42,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td><button>${data[i].fiveContent || "Acción"}</button></td>
                 </tr>`;
         }
-        tableBody.innerHTML = rows; // Renderizar las filas en la tabla
-        bindRowCheckboxEvents(); // Reenlazar los eventos a los checkboxes
+        tableBody.innerHTML = rows;
+        bindRowCheckboxEvents();
     }
 
-    // Función para manejar los eventos de los checkboxes
     function bindRowCheckboxEvents() {
         const rowCheckboxes = document.querySelectorAll(".row-checkbox");
 
-        // Al cambiar el checkbox principal
-        selectAllCheckbox.addEventListener("change", function () {
-            const isChecked = selectAllCheckbox.checked;
-            rowCheckboxes.forEach((checkbox) => {
-                checkbox.checked = isChecked; // Marca/desmarca todos los checkboxes
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", function () {
+                const isChecked = selectAllCheckbox.checked;
+                rowCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = isChecked;
+                });
             });
-        });
+        }
 
-        // Al cambiar un checkbox individual
         rowCheckboxes.forEach((checkbox) => {
             checkbox.addEventListener("change", function () {
-                // Si alguno no está seleccionado, desmarcar el checkbox principal
                 if (!checkbox.checked) {
                     selectAllCheckbox.checked = false;
                 } else {
-                    // Si todos están seleccionados, marcar el checkbox principal
                     const allChecked = Array.from(rowCheckboxes).every((cb) => cb.checked);
                     selectAllCheckbox.checked = allChecked;
                 }
@@ -69,11 +70,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Eventos para los botones
-    btnBloques.addEventListener("click", () => buildTable(data.bloques));
-    btnClases.addEventListener("click", () => buildTable(data.clases));
-    btnAsignacion.addEventListener("click", () => buildTable(data.asignacion));
+    btnBloques?.addEventListener("click", () => buildTable(data.bloques));
+    btnClases?.addEventListener("click", () => buildTable(data.clases));
+    btnAsignacion?.addEventListener("click", () => buildTable(data.asignacion));
 
-    // Mostrar tabla inicial (Clases por defecto)
     buildTable(data.clases);
+
+    const modal = document.getElementById('modal-crear');
+    const closeModal = document.getElementById('close-modal');
+
+    if (modal && closeModal) {
+        btnCrear?.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+
+        closeModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 });
