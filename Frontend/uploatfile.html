@@ -27,7 +27,28 @@
     <div class="alinear-y">
         <main>
             <div>
-                
+                <form class="register-form"  >
+                    <h3>Crear Asignacion:</h3>
+                    <label>Nombre de la Asignacion:</label>
+                    <input type="text" placeholder="Añadir un nombre" />
+                    <label>Bloques:</label>
+                    <select id="destino" name="destino" required>
+                        <option value="" disabled selected>Elige una opción</option>
+                        <option value="opcion1">Opción 1</option>
+                        <option value="opcion2">Opción 2</option>
+                        <option value="opcion3">Opción 3</option>
+                    </select>
+                    <label for="hora-inicio">Tiempo en minutos:</label>
+                    <input type="number" id="tiempo" min="1" placeholder="0">        
+                    <div>
+                        <label>Visibilidad: </label>
+                        <input type="checkbox"/>
+                    </div>
+                    <label>Cargar la pratica ( .txt):</label>
+                    <input type="file" id="archivo" name="archivo" accept=".txt" required>
+                    <button>Enviar</button>
+                </form>
+            
             </div>
         </main>
     </div>

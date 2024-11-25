@@ -74,14 +74,14 @@ main {
 
 /* Botones */
 
-button{
+.generic-button{
     background-color: var(--clr-3);
     border: none;
     padding: 0.5rem;
     border-radius: 1em;
 }
 
-button:hover{
+.generic-button:hover{
     background-color: var(--clr-4);
 }
 
@@ -177,6 +177,15 @@ button:hover{
     color: white;
     padding: 1rem; /* Añadir algo de padding para separación */
 }
+
+.main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    gap: 1rem;
+}
+
 
 .asig-container-btn{
     background-color: var(--clr-2);
@@ -327,6 +336,13 @@ button:hover{
     font-size: 1.5rem;
 }
 
+.links-students:hover{
+    color: black ;
+    background-color: white;
+    scale: 75%;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
 .stats-display{
     background-color: var(--clr-2);
     color: white;
@@ -356,3 +372,33 @@ button:hover{
     padding: 1em;
 }
 
+/*Card*/
+.card-container{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 3 columnas de igual tamaño */
+    gap: 1rem; /* Espacio entre los elementos */
+    padding: 0.5rem;
+    justify-items: center; /* Centra los elementos en cada celda */
+}
+
+.item-card {
+    background-color: var(--clr-2);
+    color: white;
+    border-radius: 0.5rem;
+    height: 300px; /* Ajusta según tus necesidades */
+    width: 100%; /* Hace que ocupe el 100% de su celda */
+    max-width: 250px; /* Ajusta el ancho máximo */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
