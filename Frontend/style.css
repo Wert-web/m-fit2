@@ -3,12 +3,12 @@
     --clr-2: #0D0C04; /* Azul principal */
     --clr-3: #A6A6A6; /* Fondo secundario */
     --clr-4: #26251A;    /*oscuro */
-    --clr-5: #D9D9D9; 
+    --clr-5: #D9D9D9;
 }
 
 body{
     margin: 0;
-    background-color: var(--clr-1);
+    background-color: var(--clr-5);
 }
 
 main {
@@ -115,18 +115,60 @@ main {
     box-sizing: border-box;  
 }
 
+/* Toggle styles */
+
 #toggleButton {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 5px; /* Borde redondeado */
+    font-size: 16px;    /* Tamaño del texto */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #toggleButton:hover {
     background-color: #0056b3;
+    transform: scale(1.05); /* Ligeramente más grande al pasar el cursor */
 }
+
+#itemlist {
+    list-style: none; /* Eliminar viñetas */
+    padding: 0;
+    margin: 0;
+    background-color: #f8f9fa; /* Fondo claro */
+    border: 1px solid #ddd;   /* Borde alrededor */
+    border-radius: 5px;       /* Borde redondeado */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    overflow: hidden; /* Evitar desbordes */
+    transition: max-height 0.3s ease; /* Suavizar la animación */
+}
+
+#itemlist li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd; /* Línea entre elementos */
+}
+
+#itemlist li:last-child {
+    border-bottom: none; /* Sin línea en el último elemento */
+}
+
+#itemlist li button {
+    width: 100%;          /* Botón ocupa todo el ancho */
+    text-align: left;     /* Texto alineado a la izquierda */
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+#itemlist li button:hover {
+    background-color: #e9ecef; /* Fondo más claro al pasar el cursor */
+}
+
 
 /* Botón de cerrar */
 .close {
@@ -173,10 +215,26 @@ main {
 }
 
 .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espaciado entre elementos */
     background-color: var(--clr-2);
-    color: white;
-    padding: 1rem; /* Añadir algo de padding para separación */
+    color: var(--clr-contrast);
+    padding: 0.5rem 1rem; /* Separación interna */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para darle dimensión */
 }
+
+.logo-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente logo y título */
+    gap: 0.5rem; /* Espacio entre logo y texto */
+}
+
+.logo {
+    width: 40px; /* Ajustar tamaño del logo */
+    height: 40px;
+    object-fit: cover; /* Asegura que la imagen no se distorsione */
+}   
 
 .main-container{
     display: flex;
@@ -203,70 +261,86 @@ main {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-}
-
-.content-table{
-    width: 100%;
     border-collapse: collapse;
 }
 
-.content-table thead{
-    background-color: #f1f3f4;
-}
+        /* Adaptaciones adicionales para la tabla */
+        .scrollable-table {
+            max-height: 300px; /* Altura máxima para el scroll vertical */
+            max-width: 100%; /* Ajusta al ancho del contenedor */
+            overflow: auto; /* Permite scroll horizontal y vertical */
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Fuerza el scroll horizontal si necesario */
+        }
+        .content-table thead {
+            background-color: #f1f3f4;
+            position: sticky; /* Cabeceras sticky */
+            top: 0; /* Fijar en la parte superior */
+            z-index: 2; /* Elevar sobre contenido */
+        }
+        .content-table th, .content-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .content-table th {
+            font-weight: bold;
+            color: #555;
+        }
+        .content-table tr {
+            scroll-snap-align: start;
+        }
+        .content-table tr:hover {
+            background-color: #f1f3f4;
+            cursor: pointer;
+        }
+        .content-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .content-table td:nth-child(1) {
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        .content-table td:nth-child(3) {
+            text-align: right;
+            color: #888;
+        }
 
-.content-table th, .content-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
 
-.content-table th {
-    font-weight: bold;
-    color: #555;
-}
-
-.content-table tr:hover {
-    background-color: #f1f3f4;
-    cursor: pointer;
-}
-
-.content-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.content-table td:nth-child(1) {
-    font-weight: bold;
-    color: #1a73e8;
-}
-
-.content-table td:nth-child(3) {
-    text-align: right;
-    color: #888;
-}
-
-/* Modal oculto inicialmente */
-.modal {
-    display: none; /* Oculto por defecto */
+/* Modal*/
+#modal-crear {
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
 .modal-content {
-    background-color: #fff;
+    background: white;
     padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 300px;
     position: relative;
-    text-align: left;
 }
+
+#close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: black;
+}
+
 
 /*Mecanografia-rtc*/
 

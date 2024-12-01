@@ -7,86 +7,82 @@
     <title>Teacher</title>
 </head>
 <body>
-<div class="principal-container">
-    <div class="header-container">
-        <header>
-            <h1>Bienvenido</h1>
+    <div class="principal-container">
+        <header class="header-container">
+            <button id="toggleButton" class="menu-button">☰</button>
+            <div class="logo-container">
+                <a href="index.html" ><img src="../assets/images/hand-l.jpeg" alt="Logo" class="logo"></a>
+                <h1 class="header-title">Bienvenido</h1>
+            </div>
         </header>
-    </div>
-    <div>
-        <aside>
-            <nav class="nav-user">
-                <ul>
-                    <li><button class="btn-nav" id="btn-regresar">Regresar</button></li>
-                    <li><button class="btn-nav" id="btn-perfil">Perfil</button></li>
-                    <li><button class="btn-nav">añadir maestro</button></li>
-                    <li><button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button></li>
+        
+        <div>
+            <nav>
+                <ul id="itemlist" style="display: none;">
+                    <li><button>Regresar</button></li>
+                    <li><button>Perfil</button></li>
+                    <li><button>Añadir Maestro</button></li>
+                    <li><button>Cerrar Sesión</button></li>
                 </ul>
             </nav>
-        </aside>
-    </div>
-    <div class="alinear-x">
-        <main>
-            <div>
+        </div>
+        <div class="alinear-x">
+            <main>
                 <div>
-                    <div class="alinear-x menu">
-                        <button class="icon-button"><input type="checkbox" id="select-all"></button>
-                        <button class="icon-button">Modificar</button>
-                        <button class="icon-button">Eliminar</button>
-                        <button class="icon-button" id="btn-crear">Crear</button> <!-- Botón funcional -->
+                    <div style="padding: 1rem;">
+                        <div class="alinear-x menu">
+                            <button class="icon-button"><input type="checkbox" id="select-all"></button>
+                            <button class="icon-button">Modificar</button>
+                            <button class="icon-button">Eliminar</button>
+                            <button class="icon-button" id="btn-crear">Crear</button>
+                            <div>
+                                <input class="search-bar" type="text" placeholder="Buscar">
+                            </div>
+                        </div>
                         <div>
-                            <input class="search-bar" type="text" placeholder="Buscar">
-                        </div>
-                    </div>
-                    <div>
-                        <div class="alinear-x btn-nav-container">
-                            <button class="btn-nav" id="btn-bloques">Bloques</button>
-                            <button class="btn-nav" id="btn-clases">Clases</button>
-                            <button class="btn-nav" id="btn-asignacion">Asignación</button>
-                        </div>
-                        <div class="alinear-x" >
-                            <!-- Generar esto a través de JS -->
-                            <table class="content-table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Clases</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="myTable" >
-                                    <!-- Contenido generado dinámicamente -->
-                                </tbody>
-                            </table>
+                            <div class="alinear-x btn-nav-container">
+                                <button class="btn-nav" id="btn-bloques">Bloques</button>
+                                <button class="btn-nav" id="btn-clases">Clases</button>
+                                <button class="btn-nav" id="btn-asignacion">Asignación</button>
+                            </div>
+                            <div class="alinear-x scrollable-table">
+                                <!-- Tabla con cabeceras sticky y scroll -->
+                                <table class="content-table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Clases</th>
+                                            <th>Descripción</th>
+                                            <th>Fecha</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="myTable">
+                                        <!-- Contenido generado dinámicamente -->
+                                        <tr><td>1</td><td>Matemáticas</td><td>Álgebra Básica</td><td>01/12/2024</td><td></td></tr>
+                                        <tr><td>2</td><td>Ciencias</td><td>Física Moderna</td><td>02/12/2024</td><td></td></tr>
+                                        <tr><td>3</td><td>Historia</td><td>Historia del Arte</td><td>03/12/2024</td><td></td></tr>
+                                        <tr><td>4</td><td>Literatura</td><td>Poesía</td><td>04/12/2024</td><td></td></tr>
+                                        <!-- Añade más filas si es necesario -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
-</div>
-
-<!-- Modal para formulario -->
-<div id="modal-crear" class="modal">
-    <div class="modal-content">
-        <span id="close-modal" class="close">&times;</span>
-        <form class="register-form">
-            <h3>Crear Clase:</h3>
-            <label>Nombre de la Clase:</label>
-            <input type="text" placeholder="Añadir un nombre" />
-            <label>Descripción:</label>
-            <textarea type="text" placeholder="Añadir una descripción"></textarea>
-            <div>
-                <label>Visibilidad: </label>
-                <input type="checkbox"/>
+    
+    <!-- Modal para formulario -->
+    <div id="modal-crear" style="display: none;">
+        <div class="modal-content">
+            <span id="close-modal">&times;</span>
+            <div id="form-container">
+                <!-- Los formularios específicos se renderizan dinámicamente aquí -->
             </div>
-            <button>Enviar</button>
-        </form>
+        </div>
     </div>
-</div>
-
 <script src="script.js"></script>
 </body>
 </html>

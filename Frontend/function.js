@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const pauseButton = document.querySelector(".stats-display button:nth-child(1)"); // Botón Pausar
     const endButton = document.querySelector(".stats-display button:nth-child(2)"); // Botón Reiniciar
 
+
     // Variables para la práctica de mecanografía
     let words = [];
     let currentWordIndex = 0;
@@ -124,13 +125,17 @@ document.addEventListener("DOMContentLoaded", function () {
    // Cargar el texto y empezar práctica
    loadTextFromFile();
 
-   const toggleButton = document.getElementById('toggleButton');
+const itemList = document.getElementById('itemlist');
+const toggleButton = document.getElementById("toggleButton");
 
-   toggleButton?.addEventListener('click', function () {
-    if (itemList.style.display === 'none' || itemList.style.display === '') {
-        itemList.style.display = 'block';
-    } else {
-        itemList.style.display = 'none';
-    }
-});
+        // Agregar evento al botón
+        toggleButton.addEventListener("click", function () {
+            // Alternar el estilo de visibilidad
+            if (itemList.style.display === "none") {
+                 itemList.style.display = "block"; // Mostrar el menú
+            } else {
+                itemList.style.display = "none"; // Ocultar el menú
+            }
+            });
+
 });

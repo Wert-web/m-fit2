@@ -6,6 +6,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectAllCheckbox = document.getElementById("select-all");
     const itemList = document.getElementById('itemlist');
     const btnCrear = document.getElementById('btn-crear'); // Botón para abrir el modal
+    const toggleButton = document.getElementById("toggleButton");
+    
+        // Agregar evento al botón
+    toggleButton.addEventListener("click", function () {
+        // Alternar el estilo de visibilidad
+        if (itemList.style.display === "none") {
+             itemList.style.display = "block"; // Mostrar el menú
+        } else {
+            itemList.style.display = "none"; // Ocultar el menú
+        }
+        });
+    
 
     if (!tableBody) {
         console.error("El elemento con id 'myTable' no existe.");
@@ -21,6 +33,24 @@ document.addEventListener("DOMContentLoaded", function () {
         bloques: [
             { firstContent: "Bloque A", secondContent: "Primaria", teirdContent: "2023-12-10", fiveContent: "Detalles" },
             { firstContent: "Bloque B", secondContent: "Secundaria", teirdContent: "2024-01-05", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
+            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
             { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
         ],
         asignacion: [
@@ -44,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         tableBody.innerHTML = rows;
         bindRowCheckboxEvents();
+        resetCheckboxes();
     }
 
     function bindRowCheckboxEvents() {
@@ -70,28 +101,142 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Función para desmarcar todos los checkboxes
+    function resetCheckboxes() {
+        if (selectAllCheckbox) selectAllCheckbox.checked = false;
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    }
+
     btnBloques?.addEventListener("click", () => buildTable(data.bloques));
     btnClases?.addEventListener("click", () => buildTable(data.clases));
     btnAsignacion?.addEventListener("click", () => buildTable(data.asignacion));
 
     buildTable(data.clases);
 
+    //Modal Code
+
     const modal = document.getElementById('modal-crear');
     const closeModal = document.getElementById('close-modal');
+    const formContainer = document.getElementById('form-container');
 
-    if (modal && closeModal) {
-        btnCrear?.addEventListener('click', function () {
-            modal.style.display = 'block';
-        });
+    // Variable para rastrear la vista actual
+    let currentView = 'clases'; // Valores posibles: 'clases', 'bloques', 'asignacion'
 
-        closeModal.addEventListener('click', function () {
+    // Formulario para cada vista
+    const forms = {
+        clases: `
+        <form class="register-form"  >
+                <h3>Crear Clase:</h3>
+                <label>Nombre de la Clase:</label>
+                <input type="text" placeholder="Añadir un nombre" />
+                <label>Descripcion:</label>
+                <textarea type="text" placeholder="Añadir un descripcion" ></textarea>
+                <div>
+                    <label>Visibilidad: </label>
+                    <input type="checkbox"/>
+                </div>
+                <button>Enviar</button>
+            </form>
+        `,
+        bloques: `
+            <form class="register-form"  >
+                <h3>Crear Bloque:</h3>
+                <label>Nombre del bloque:</label>
+                <input type="text" placeholder="Añadir un nombre" />
+                <label>Clases:</label>
+                <select id="destino" name="destino" required>
+                    <option value="" disabled selected>Elige una opción</option>
+                    <option value="opcion1">Opción 1</option>
+                    <option value="opcion2">Opción 2</option>
+                    <option value="opcion3">Opción 3</option>
+                </select>
+                <label>Descripcion:</label>
+                <textarea type="text" placeholder="Añadir un descripcion" ></textarea>
+                <div>
+                    <label>Visibilidad: </label>
+                    <input type="checkbox"/>
+                </div>
+                <button>Enviar</button>
+            </form>
+        `,
+        asignacion: `
+            <form class="register-form"  >
+                <h3>Crear Asignacion:</h3>
+                <label>Nombre de la Asignacion:</label>
+                <input type="text" placeholder="Añadir un nombre" />
+                <label>Bloques:</label>
+                <select id="destino" name="destino" required>
+                    <option value="" disabled selected>Elige una opción</option>
+                    <option value="opcion1">Opción 1</option>
+                    <option value="opcion2">Opción 2</option>
+                    <option value="opcion3">Opción 3</option>
+                </select>
+                <label for="hora-inicio">Tiempo en minutos:</label>
+                <input type="number" id="tiempo" min="1" placeholder="0">        
+                <div>
+                    <label>Visibilidad: </label>
+                    <input type="checkbox"/>
+                </div>
+                <label>Cargar la pratica ( .txt):</label>
+                <input type="file" id="archivo" name="archivo" accept=".txt" required>
+                <button>Enviar</button>
+            </form>
+        `
+    };
+
+    // Función para mostrar el formulario según la vista actual
+    function renderForm(view) {
+        formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
+    }
+
+    // Botón Crear abre el modal y muestra el formulario actual
+    btnCrear?.addEventListener('click', function () {
+        renderForm(currentView);
+        modal.style.display = 'block';
+    });
+
+    // Cerrar el modal
+    closeModal?.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
             modal.style.display = 'none';
-        });
+        }
+    });
 
-        window.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
+    btnBloques?.addEventListener("click", function () {
+        currentView = 'bloques';
+    });
+
+    btnClases?.addEventListener("click", function () {
+        currentView = 'clases';
+    });
+
+    btnAsignacion?.addEventListener("click", function () {
+        currentView = 'asignacion';
+    });
+
+    // Inicializa con la vista predeterminada
+    renderForm(currentView);
+
+    // Función para filtrar la tabla según la búsqueda
+    searchBar?.addEventListener("input", function () {
+        const searchTerm = searchBar.value.toLowerCase();
+        const rows = tableBody.querySelectorAll("tr");
+
+        rows.forEach((row) => {
+            const rowText = row.innerText.toLowerCase();
+            if (rowText.includes(searchTerm)) {
+                row.style.display = ""; // Mostrar la fila
+            } else {
+                row.style.display = "none"; // Ocultar la fila
             }
         });
-    }
+    });
+
 });
