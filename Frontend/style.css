@@ -263,7 +263,7 @@ main {
 
 
 /*Tables*/
-.table-container{
+.table-container {
     width: 80%;
     max-width: 900px;
     margin: 20px;
@@ -356,8 +356,9 @@ main {
 
 /*Areas */
 /* Estilo para resaltar la palabra actual */
-.area-display span.highlight {
-    background-color: var(--clr-softlight);
+/* Resaltar la palabra actual */
+.texts-display span.highlight {
+    background-color: black;
     color: white;
     padding: 2px 4px;
     border-radius: 3px;
@@ -454,6 +455,10 @@ main {
     height: fit-content;
     width: fit-content;
     padding: 1em;
+}
+
+.text-display, span{
+    font-size: larger;
 }
 
 /*Card*/

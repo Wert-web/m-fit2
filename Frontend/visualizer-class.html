@@ -21,7 +21,6 @@
                 <ul id="itemlist" style="display: none;">
                     <li><button>Regresar</button></li>
                     <li><button>Perfil</button></li>
-                    <li><button>Añadir Maestro</button></li>
                     <li><button>Cerrar Sesión</button></li>
                 </ul>
             </nav>
@@ -32,29 +31,21 @@
                     <div style="padding: 1rem;">
                         <div class="alinear-x menu">
                             <button class="icon-button"><input type="checkbox" id="select-all"></button>
-                            <button class="icon-button">Modificar</button>
                             <button class="icon-button">Eliminar</button>
-                            <button class="icon-button" id="btn-crear">Crear</button>
                             <div>
                                 <input class="search-bar" type="text" placeholder="Buscar">
                             </div>
                         </div>
                         <div>
                             <div class="btn-nav-container">
-                                <button class="btn-nav" id="btn-bloques">Bloques</button>
-                                <button class="btn-nav" id="btn-clases">Clases</button>
-                                <button class="btn-nav" id="btn-asignacion">Asignación</button>
+                                <!-- Tabla con cabeceras sticky y scroll -->
                             </div>
                             <div class="alinear-x scrollable-table">
                                 <!-- Tabla con cabeceras sticky y scroll -->
                                 <table class="content-table">
                                     <thead>
                                         <tr>
-                                            <th></th>
-                                            <th>Clases</th>
-                                            <th>Descripción</th>
-                                            <th>Fecha</th>
-                                            <th></th>
+                                            <!-- Contenido generado dinámicamente -->
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
@@ -68,16 +59,7 @@
             </main>
         </div>
     </div>
-    
-    <!-- Modal para formulario -->
-    <div id="modal-crear" style="display: none;">
-        <div class="modal-content">
-            <span id="close-modal">&times;</span>
-            <div id="form-container">
-                <!-- Los formularios específicos se renderizan dinámicamente aquí -->
-            </div>
-        </div>
     </div>
-<script src="script.js"></script>
+<script src="script-visualizer.js"></script>
 </body>
 </html>
