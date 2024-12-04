@@ -139,44 +139,48 @@ document.addEventListener("DOMContentLoaded", function () {
     // Verificar la entrada del usuario
     inputArea.addEventListener("input", function () {
         if (estado !== "iniciado") return;
-
+    
         const inputText = inputArea.value.trim();
         const currentWord = words[currentWordIndex];
         const currentChar = currentWord[currentCharIndex];
-
+    
         if (inputText === currentWord) {
             // Palabra completada
             document.querySelectorAll(".texts-display span")[currentWordIndex].classList.remove("highlight");
-            currentWordIndex++;
+            currentWordIndex++; // Avanzar al siguiente índice de palabra
             totalWords++;
-            currentCharIndex = 0;
-
+            currentCharIndex = 0; // Reiniciar índice de caracteres
+    
             if (currentWordIndex < words.length) {
+                // Agregar highlight a la nueva palabra
                 document.querySelectorAll(".texts-display span")[currentWordIndex].classList.add("highlight");
             } else {
                 cambiarEstado("finalizado");
                 alert("¡Has completado el texto!");
             }
-
-            inputArea.value = "";
+    
+            inputArea.value = ""; // Limpiar el área de entrada
+            updateKeyDisplay(); // Actualizar la letra actual después de cambiar de palabra
         } else if (inputText.endsWith(currentChar)) {
             // Letra correcta
-            currentCharIndex++;
-            updateKeyDisplay();
+            currentCharIndex++; // Avanzar al siguiente carácter
+            updateKeyDisplay(); // Actualizar la letra actual
         } else {
             // Letra incorrecta
             errors++;
         }
-
-        updateStats();
+    
+        updateStats(); // Actualizar estadísticas
     });
+    
 
     // Actualizar la tecla que debe presionarse
     function updateKeyDisplay() {
-        const currentWord = words[currentWordIndex] || "";
-        const currentChar = currentWord[currentCharIndex] || "";
+        const currentWord = words[currentWordIndex] || ""; // Palabra actual
+        const currentChar = currentWord[currentCharIndex] || ""; // Carácter actual
         keySpan.textContent = currentChar.toUpperCase(); // Mostrar la letra actual
     }
+    
 
     // Actualizar estadísticas de la práctica
     function updateStats() {
