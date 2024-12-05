@@ -524,3 +524,39 @@ main {
     border-color: #0F0;
     border-style: inset;
 }
+
+.profile-container{
+    font-family: Arial, sans-serif; 
+    background-color: #f0f0f0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    margin:0;
+}
+
+.profile-wrapper { 
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 20px; }
+    
+.profile-wrapper img { 
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.profile-wrapper h2 { 
+    margin: 0; 
+    font-size: 24px; 
+    color: #333; 
+} 
+.profile-wrapper p { 
+    margin: 5px 0;
+    color: #666; 
+}
