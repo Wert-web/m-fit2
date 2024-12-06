@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const botonesConfig = [
         { id: "btn-bloques", texto: "Bloques" },
         { id: "btn-alumnos", texto: "Alumnos" },
+        { id: "btn-asignaciones", texto: "Asignaciones" }, // Añadido para asignaciones
     ];
 
     function generarBotones() {
@@ -18,21 +19,21 @@ document.addEventListener("DOMContentLoaded", function () {
             btnElement.textContent = boton.texto;
 
             btnElement.addEventListener("click", () => {
-                actualizarTabla(boton.id.split("-")[1]); // Extraer tipo (e.g., bloques, alumnos)
+                const tipo = boton.id.split("-")[1]; // Extraer tipo (e.g., bloques, alumnos, asignaciones)
+                const id = tipo === 'asignaciones' ? localStorage.getItem("blockId") : localStorage.getItem("classId");
+                if (!id) {
+                    console.error(`No se encontró ningún ID de ${tipo === 'asignaciones' ? 'block' : 'class'} en localStorage.`);
+                    return;
+                }
+                actualizarTabla(tipo, id);
             });
 
             btnNavContainer.appendChild(btnElement);
         });
     }
 
-    function actualizarTabla(tipo) {
-        const id_class = localStorage.getItem("classId");
-        if (!id_class) {
-            console.error("No se encontró ningún ID de clase en localStorage.");
-            return;
-        }
-
-        fetch(`../../backend/php/get_relations.php?id_class=${id_class}&type=${tipo}`)
+    function actualizarTabla(tipo, id) {
+        fetch(`../../backend/php/get_relations.php?id_${tipo === 'asignaciones' ? 'block' : 'class'}=${id}&type=${tipo}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -50,15 +51,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function buildTable(data, tipo) {
-        // Definir cabeceras y contenido por tipo
         let cabeceras, filas;
         if (tipo === 'bloques') {
-            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Acción"];
+            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Visible", "Acción"];
             filas = data.map(fila => `
                 <tr>
                     <td><input type="checkbox" class="row-checkbox"></td>
                     <td>${fila.firstContent || "N/A"}</td>
                     <td>${fila.secondContent || "Sin fecha"}</td>
+                    <td>${fila.visibility === 1 ? "Sí" : "No"}</td>
                     <td><button>Detalles</button></td>
                 </tr>
             `);
@@ -69,6 +70,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td><input type="checkbox" class="row-checkbox"></td>
                     <td>${fila.firstContent || "N/A"}</td>
                     <td>${fila.secondContent || "Sin fecha"}</td>
+                    <td><button>Detalles</button></td>
+                </tr>
+            `);
+        } else if (tipo === 'asignaciones') {
+            cabeceras = ["Seleccionar", "Nombre de Asignación", "Tiempo", "Archivo", "Visible", "Acción"];
+            filas = data.map(fila => `
+                <tr>
+                    <td><input type="checkbox" class="row-checkbox"></td>
+                    <td>${fila.firstContent || "N/A"}</td>
+                    <td>${fila.secondContent || "Sin tiempo"}</td>
+                    <td>${fila.thirdContent || "Sin archivo"}</td>
+                    <td>${fila.fourthContent === 1 ? "Sí" : "No"}</td>
                     <td><button>Detalles</button></td>
                 </tr>
             `);
@@ -118,5 +131,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicialización
     generarBotones(); // Crear los botones dinámicamente
-    actualizarTabla("bloques"); // Mostrar contenido inicial
+    actualizarTabla("bloques", localStorage.getItem("classId")); // Mostrar contenido inicial para bloques
 });

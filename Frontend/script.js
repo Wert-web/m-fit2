@@ -26,19 +26,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const button = event.target;
         const type = button.getAttribute("data-type");
         const id = button.getAttribute("data-id");
-
+    
         if (type && id) {
             localStorage.setItem(`${type}Id`, id);
             console.log(`ID de ${type} guardado en localStorage:`, id);
-
-            // Redirigir a la nueva página
-            if (type === 'class') {
-                window.location.href = 'visualizer-class.html'; // Reemplaza con la URL de la página de la clase
-            } else if (type === 'block') {
-                window.location.href = 'block_page.html'; // Reemplaza con la URL de la página del bloque
-            }
+    
+            // Redirigir siempre a visualizer-class.html
+            window.location.href = 'visualizer-class.html';
         }
     }
+    
 
     function buildTable(data) {
         let rows = "";
