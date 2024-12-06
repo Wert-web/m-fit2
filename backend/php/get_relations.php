@@ -22,10 +22,22 @@ try {
     $consulta = '';
     switch ($type) {
         case 'bloques':
-            $consulta = "SELECT id_block AS id, name AS firstContent, date AS secondContent FROM block WHERE id_class = :id_class";
+            // Cambiar para consultar la tabla class_block y obtener información de block
+            $consulta = "
+                SELECT b.id_block AS id, b.name AS firstContent, b.date AS secondContent 
+                FROM class_block cb 
+                JOIN block b ON cb.id_block = b.id_block 
+                WHERE cb.id_class = :id_class
+            ";
             break;
         case 'alumnos':
-            $consulta = "SELECT id_user AS id, name AS firstContent, date AS secondContent FROM user WHERE id_class = :id_class AND type = 0";
+            // Cambiar para consultar la tabla class_user y obtener información de user
+            $consulta = "
+                SELECT u.id_user AS id, u.name AS firstContent, u.date AS secondContent 
+                FROM class_user cu 
+                JOIN user u ON cu.id_user = u.id_user 
+                WHERE cu.id_class = :id_class AND u.type = 0
+            ";
             break;
         default:
             echo json_encode(['error' => "Tipo desconocido."]);
