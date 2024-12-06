@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $visibility = isset($_POST['visibility']) ? 1 : 0;
     $id_user = $_SESSION['id_user']; // Asumiendo que el usuario está registrado en la sesión
 
-    $consulta = "INSERT INTO class (id_user, visibility, date) VALUES (:id_user, :visibility, NOW())";
+    $consulta = "INSERT INTO class (id_user, visibility, date, name) VALUES (:id_user, :visibility, NOW(), :name)";
     $stmt = $pdo->prepare($consulta);
 
-    if ($stmt->execute([':id_user' => $id_user, ':visibility' => $visibility])) {
+    if ($stmt->execute([':id_user' => $id_user, ':visibility' => $visibility, ':name' => $name])) {
         echo "Clase creada correctamente.";
     } else {
         echo "Error al crear la clase: " . $stmt->errorInfo()[2];

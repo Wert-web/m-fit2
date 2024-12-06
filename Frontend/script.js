@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.getElementById("myTable");
     const btnBloques = document.getElementById("btn-bloques");
     const btnClases = document.getElementById("btn-clases");
+    const searchBar = document.getElementById('search-bar');
     const btnAsignacion = document.getElementById("btn-asignacion");
     const selectAllCheckbox = document.getElementById("select-all");
     const itemList = document.getElementById('itemlist');
@@ -129,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const forms = {
         clases: `
-        <form class="register-form" id="form-clases" method="POST">
+            <form class="register-form" id="form-clases" method="POST">
                 <h3>Crear Clase:</h3>
                 <label>Nombre de la Clase:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
@@ -148,11 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <label>Nombre del bloque:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Clases:</label>
-                <select id="destino" name="class_id" required>
+                <select id="class_id" name="class_id" required>
                     <option value="" disabled selected>Elige una opción</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                    <option value="3">Opción 3</option>
                 </select>
                 <label>Descripcion:</label>
                 <textarea name="description" placeholder="Añadir un descripcion" required></textarea>
@@ -169,11 +167,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <label>Nombre de la Asignacion:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Bloques:</label>
-                <select id="destino" name="block_id" required>
+                <select id="block_id" name="block_id" required>
                     <option value="" disabled selected>Elige una opción</option>
-                    <option value="1">Opción 1</option>
-                    <option value="2">Opción 2</option>
-                    <option value="3">Opción 3</option>
                 </select>
                 <label for="tiempo">Tiempo en minutos:</label>
                 <input type="number" id="tiempo" name="time" min="1" placeholder="0" required>        
@@ -181,12 +176,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     <label>Visibilidad: </label>
                     <input type="checkbox" name="visibility"/>
                 </div>
-                <label>Cargar la pratica ( .txt):</label>
+                <label>Cargar la practica ( .txt):</label>
                 <input type="file" id="archivo" name="archivo" accept=".txt" required>
                 <button type="submit">Enviar</button>
             </form>
         `
-    };    
+    };
+    
 
     // Función para mostrar el formulario según la vista actual
     function renderForm(view) {
@@ -253,6 +249,52 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error:', error));
     });
+
+
+    function llenarSelectClases(selectId) {
+        fetch('../backend/php/get_class.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            if (!Array.isArray(data)) {
+                throw new Error('La respuesta no es un array válido');
+            }
+            console.log('Clases obtenidas:', data);
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="" disabled selected>Elige una opción</option>';
+            data.forEach(clase => {
+                const option = document.createElement('option');
+                option.value = clase.id_class;
+                option.textContent = clase.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al obtener las clases:', error));
+    }
+    
+// Función para mostrar el formulario según la vista actual
+function renderForm(view) {
+    formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
+    if (view === 'bloques') {
+        llenarSelectClases('class_id');
+    } else if (view === 'asignacion') {
+        llenarSelectClases('block_id');
+    }
+}
+
+btnCrear?.addEventListener('click', function () {
+    renderForm(currentView);
+    modal.style.display = 'block';
+});
+
+
 
     // Función para filtrar la tabla según la búsqueda
     searchBar?.addEventListener("input", function () {

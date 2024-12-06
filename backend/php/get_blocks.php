@@ -13,16 +13,15 @@ try {
 
     $id_user = $_SESSION['id_user'];
 
-    $consulta = "SELECT id_class, name FROM class WHERE id_user = :id_user";
+    $consulta = "SELECT id_block, name FROM block WHERE id_user = :id_user";
     $stmt = $pdo->prepare($consulta);
     $stmt->execute([':id_user' => $id_user]);
 
-    $clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $blocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header('Content-Type: application/json');
-    echo json_encode($clases);
+    echo json_encode($blocks);
 } catch (Exception $e) {
     header('Content-Type: application/json');
     echo json_encode(['error' => $e->getMessage()]);
 }
-?>
