@@ -215,33 +215,91 @@ const toggleButton = document.getElementById("toggleButton");
     
     // Mapeo de letras a imágenes de las manos
     const handImageMapping = {
-        a: "left_pinky.jpg", b: "left_index.jpg", c: "left_middle.jpg", 
-        d: "left_index.jpg", e: "left_middle.jpg", f: "left_index.jpg", 
-        g: "left_index.jpg", h: "right_index.jpg", i: "right_middle.jpg", 
-        j: "right_index.jpg", k: "right_middle.jpg", l: "right_ring.jpg", 
-        m: "right_index.jpg", n: "right_index.jpg", o: "right_ring.jpg", 
-        p: "right_pinky.jpg", q: "left_pinky.jpg", r: "left_index.jpg", 
-        s: "left_ring.jpg", t: "left_index.jpg", u: "right_index.jpg", 
-        v: "left_index.jpg", w: "left_ring.jpg", x: "left_ring.jpg", 
-        y: "right_index.jpg", z: "left_pinky.jpg"
+        a: { left: "left_pinky.jpg", right: "hand-r.jpeg" },
+        b: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        c: { left: "left_middle.jpg", right: "hand-r.jpeg" },
+        d: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        e: { left: "left_middle.jpg", right: "hand-r.jpeg" },
+        f: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        g: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        h: { left: "hand-l.jpeg", right: "right_index.jpg" },
+        i: { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        j: { left: "hand-l.jpeg", right: "right_index.jpg" },
+        k: { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        l: { left: "hand-l.jpeg", right: "right_ring.jpg" },
+        m: { left: "hand-l.jpeg", right: "right_index.jpg" },
+        n: { left: "hand-l.jpeg", right: "right_index.jpg" },
+        o: { left: "hand-l.jpeg", right: "right_ring.jpg" },
+        p: { left: "hand-l.jpeg", right: "right_pinky.jpg" },
+        q: { left: "left_pinky.jpg", right: "hand-r.jpeg" },
+        r: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        s: { left: "left_ring.jpg", right: "hand-r.jpeg" },
+        t: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        u: { left: "", right: "right_index.jpg" },
+        v: { left: "left_index.jpg", right: "hand-r.jpeg" },
+        w: { left: "left_ring.jpg", right: "hand-r.jpeg" },
+        x: { left: "left_ring.jpg", right: "hand-r.jpeg" },
+        y: { left: "", right: "right_index.jpg" },
+        z: { left: "left_pinky.jpg", right: "hand-r.jpeg" },
+        // Signos de puntuación
+        ",": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        ".": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "?": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "!": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        ";": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        ":": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "-": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "_": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "(": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        ")": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "[": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        "]": { left: "hand-l.jpeg", right: "right_middle.jpg" },
+        // Letras con acento
+        á: { left: "left_pinky.jpg", right: "" }, 
+        é: { left: "left_middle.jpg", right: "" }, 
+        í: { left: "", right: "right_middle.jpg" }, 
+        ó: { left: "", right: "right_ring.jpg" }, 
+        ú: { left: "", right: "right_index.jpg" }, 
+        ü: { left: "", right: "right_index.jpg" }, 
+        ñ: { left: "", right: "right_index.jpg" }
     };
+    
 
     // Actualizar la tecla que debe presionarse y cambiar la imagen
+    const currentHandLeftImage = document.getElementById("current-hand-image"); // Imagen de la mano izquierda
+    const currentHandRightImage = document.getElementById("hand-rigth"); // Imagen de la mano derecha
+    
     function updateKeyDisplay() {
         const currentWord = words[currentWordIndex] || ""; // Palabra actual
         const currentChar = currentWord[currentCharIndex] || ""; // Carácter actual
         keySpan.textContent = currentChar.toUpperCase(); // Mostrar la letra actual
-
+    
         // Cambiar la imagen según la letra actual
         if (currentChar) {
-            currentHandImage.src = `images/hands/${handImageMapping[currentChar.toLowerCase()]}`;
-            currentHandImage.alt = `Posición de la mano para ${currentChar.toUpperCase()}`;
+            const handImages = handImageMapping[currentChar.toLowerCase()];
+            if (handImages) {
+                currentHandLeftImage.src = `../assets/images/hands/${handImages.left || "default_left.jpg"}`;
+                currentHandRightImage.src = `../assets/images/hands/${handImages.right || "default_right.jpg"}`;
+                currentHandLeftImage.alt = `Posición de la mano izquierda para ${currentChar.toUpperCase()}`;
+                currentHandRightImage.alt = `Posición de la mano derecha para ${currentChar.toUpperCase()}`;
+            } else {
+                // Mostrar imágenes neutras si la letra no está en el mapeo
+                currentHandLeftImage.src = "../assets/images/hands/hand-l.jpeg";
+                currentHandRightImage.src = "../assets/images/hands/hand-r.jpeg";
+                currentHandLeftImage.alt = "Sin letra";
+                currentHandRightImage.alt = "Sin letra";
+            }
         } else {
-            currentHandImage.src = "";
-            currentHandImage.alt = "Sin letra";
+            currentHandLeftImage.src = "../assets/images/hands/hand-l.jpeg";
+            currentHandRightImage.src = "../assets/images/hands/hand-r.jpeg";
+            currentHandLeftImage.alt = "Sin letra";
+            currentHandRightImage.alt = "Sin letra";
         }
-    }
+    }    
 
     // Asegúrate de llamar a updateKeyDisplay cuando corresponda
             
+
+
+    
 });
