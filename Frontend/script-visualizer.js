@@ -53,6 +53,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function buildTable(data, tipo) {
         let cabeceras, filas;
+    
+        if (!data || !Array.isArray(data)) {
+            console.error("Los datos no son un arreglo o están indefinidos.");
+            tableBody.innerHTML = "<tr><td colspan='5'>No se encontraron datos.</td></tr>";
+            return;
+        }
+    
         if (tipo === 'bloques') {
             filas = data.map(fila => `
                 <tr data-id="${fila.id}">
@@ -63,8 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td><button>Detalles</button></td>
                 </tr>
             `);
-        }
-         else if (tipo === 'alumnos') {
+        } else if (tipo === 'alumnos') {
             cabeceras = ["Seleccionar", "Nombre", "Fecha", "Acción"];
             filas = data.map(fila => `
                 <tr>
@@ -87,16 +93,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 </tr>
             `);
         }
-
+    
         // Actualizar cabeceras
-        tableHead.innerHTML = cabeceras.map(cabecera => `<th>${cabecera}</th>`).join("");
-
+        tableHead.innerHTML = cabeceras ? cabeceras.map(cabecera => `<th>${cabecera}</th>`).join("") : "";
+    
         // Actualizar filas
         tableBody.innerHTML = filas.join("");
-
+    
         bindRowCheckboxEvents();
         resetCheckboxes();
     }
+    
 
     function bindRowCheckboxEvents() {
         const rowCheckboxes = document.querySelectorAll(".row-checkbox");
