@@ -1,65 +1,44 @@
+const searchBar = document.getElementById('search-bar');
 document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.getElementById("myTable");
     const btnBloques = document.getElementById("btn-bloques");
     const btnClases = document.getElementById("btn-clases");
-    const searchBar = document.getElementById('search-bar');
     const btnAsignacion = document.getElementById("btn-asignacion");
     const selectAllCheckbox = document.getElementById("select-all");
     const itemList = document.getElementById('itemlist');
-    const btnCrear = document.getElementById('btn-crear'); // Botón para abrir el modal
+    const btnCrear = document.getElementById('btn-crear'); 
     const toggleButton = document.getElementById("toggleButton");
-    
-        // Agregar evento al botón
+
     toggleButton.addEventListener("click", function () {
-        // Alternar el estilo de visibilidad
         if (itemList.style.display === "none") {
-             itemList.style.display = "block"; // Mostrar el menú
+            itemList.style.display = "block";
         } else {
-            itemList.style.display = "none"; // Ocultar el menú
+            itemList.style.display = "none";
         }
-        });
-    
+    });
 
     if (!tableBody) {
         console.error("El elemento con id 'myTable' no existe.");
         return;
     }
 
-    const data = {
-        clases: [
-            { firstContent: "Matemáticas", secondContent: "Álgebra básica", teirdContent: "2024-01-10", fiveContent: "Detalles" },
-            { firstContent: "Historia", secondContent: "Historia Mundial", teirdContent: "2024-01-12", fiveContent: "Detalles" },
-            { firstContent: "Inglés", secondContent: "Nivel Intermedio", teirdContent: "2024-01-15", fiveContent: "Detalles" },
-        ],
-        bloques: [
-            { firstContent: "Bloque A", secondContent: "Primaria", teirdContent: "2023-12-10", fiveContent: "Detalles" },
-            { firstContent: "Bloque B", secondContent: "Secundaria", teirdContent: "2024-01-05", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-            { firstContent: "Bloque C", secondContent: "Preparatoria", teirdContent: "2024-01-20", fiveContent: "Detalles" },
-        ],
-        asignacion: [
-            { firstContent: "Asignación 1", secondContent: "Proyecto Final", teirdContent: "2024-02-01", fiveContent: "Ver" },
-            { firstContent: "Asignación 2", secondContent: "Ensayo", teirdContent: "2024-02-10", fiveContent: "Ver" },
-            { firstContent: "Asignación 3", secondContent: "Examen", teirdContent: "2024-03-05", fiveContent: "Ver" },
-        ]
-    };
+    function fetchAndBuildTable(type) {
+        fetch(`../backend/php/get_data.php?type=${type}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            console.log(`${type} obtenidas:`, data);
+            buildTable(data);
+        })
+        .catch(error => console.error(`Error al obtener los ${type}:`, error));
+    }
 
     function buildTable(data) {
         let rows = "";
@@ -102,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Función para desmarcar todos los checkboxes
     function resetCheckboxes() {
         if (selectAllCheckbox) selectAllCheckbox.checked = false;
         const rowCheckboxes = document.querySelectorAll(".row-checkbox");
@@ -111,11 +89,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    btnBloques?.addEventListener("click", () => buildTable(data.bloques));
-    btnClases?.addEventListener("click", () => buildTable(data.clases));
-    btnAsignacion?.addEventListener("click", () => buildTable(data.asignacion));
+    btnBloques?.addEventListener("click", () => fetchAndBuildTable('bloques'));
+    btnClases?.addEventListener("click", () => fetchAndBuildTable('clases'));
+    btnAsignacion?.addEventListener("click", () => fetchAndBuildTable('asignaciones'));
 
-    buildTable(data.clases);
+    fetchAndBuildTable('clases');
 
     //Modal Code
 
@@ -135,31 +113,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 <label>Nombre de la Clase:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Descripcion:</label>
-                <textarea name="description" placeholder="Añadir un descripcion" required></textarea>
+                <textarea name="description" placeholder="Añadir una descripción" required></textarea>
                 <div>
                     <label>Visibilidad: </label>
                     <input type="checkbox" name="visibility"/>
                 </div>
                 <button type="submit">Enviar</button>
             </form>
+
         `,
         bloques: `
             <form class="register-form" id="form-bloques" method="POST">
                 <h3>Crear Bloque:</h3>
-                <label>Nombre del bloque:</label>
+                <label>Nombre del Bloque:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
-                <label>Clases:</label>
-                <select id="class_id" name="class_id" required>
-                    <option value="" disabled selected>Elige una opción</option>
-                </select>
                 <label>Descripcion:</label>
-                <textarea name="description" placeholder="Añadir un descripcion" required></textarea>
+                <textarea name="description" placeholder="Añadir una descripción" required></textarea>
                 <div>
                     <label>Visibilidad: </label>
                     <input type="checkbox" name="visibility"/>
                 </div>
                 <button type="submit">Enviar</button>
             </form>
+
         `,
         asignacion: `
             <form class="register-form" id="form-asignacion" method="POST" enctype="multipart/form-data">
@@ -183,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `
     };
     
-
     // Función para mostrar el formulario según la vista actual
     function renderForm(view) {
         formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
@@ -278,23 +253,50 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error al obtener las clases:', error));
     }
+
+    function llenarSelectBloques(selectId) {
+        fetch('../backend/php/get_blocks.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            if (!Array.isArray(data)) {
+                throw new Error('La respuesta no es un array válido');
+            }
+            console.log('Bloques obtenidos:', data);
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="" disabled selected>Elige una opción</option>';
+            data.forEach(block => {
+                const option = document.createElement('option');
+                option.value = block.id_block;
+                option.textContent = block.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al obtener los bloques:', error));
+    }
     
 // Función para mostrar el formulario según la vista actual
 function renderForm(view) {
-    formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
-    if (view === 'bloques') {
-        llenarSelectClases('class_id');
-    } else if (view === 'asignacion') {
-        llenarSelectClases('block_id');
-    }
-}
+     formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
+    if (view === 'bloques') { llenarSelectClases('class_id');
+
+     } else if (view === 'asignacion') { llenarSelectBloques('block_id');
+
+     } } btnCrear?.addEventListener('click', function () { renderForm(currentView);
+        modal.style.display = 'block';
+     });
 
 btnCrear?.addEventListener('click', function () {
     renderForm(currentView);
     modal.style.display = 'block';
 });
-
-
 
     // Función para filtrar la tabla según la búsqueda
     searchBar?.addEventListener("input", function () {
