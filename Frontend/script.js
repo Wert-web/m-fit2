@@ -6,8 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAsignacion = document.getElementById("btn-asignacion");
     const selectAllCheckbox = document.getElementById("select-all");
     const itemList = document.getElementById('itemlist');
-    const btnCrear = document.getElementById('btn-crear'); 
+    const btnCrear = document.getElementById('btn-crear');
+    const btnDelete = document.getElementById("btn-delete");
     const toggleButton = document.getElementById("toggleButton");
+    let currentView = 'clases'; // Valores posibles: 'clases', 'bloques', 'asignacion'
 
     toggleButton.addEventListener("click", function () {
         if (itemList.style.display === "none") {
@@ -35,13 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = 'visualizer-class.html';
         }
     }
-    
 
     function buildTable(data) {
         let rows = "";
         for (let i = 0; i < data.length; i++) {
             rows += `
-                <tr>
+                <tr data-id="${data[i].id}">
                     <td><input type="checkbox" class="row-checkbox"></td>
                     <td>${data[i].firstContent || "N/A"}</td>
                     <td>${data[i].secondContent || "Sin descripción"}</td>
@@ -104,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function resetCheckboxes() {
+        const selectAllCheckbox = document.getElementById("select-all");
         if (selectAllCheckbox) selectAllCheckbox.checked = false;
         const rowCheckboxes = document.querySelectorAll(".row-checkbox");
         rowCheckboxes.forEach((checkbox) => {
@@ -111,9 +113,65 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    btnBloques?.addEventListener("click", () => fetchAndBuildTable('bloques'));
-    btnClases?.addEventListener("click", () => fetchAndBuildTable('clases'));
-    btnAsignacion?.addEventListener("click", () => fetchAndBuildTable('asignaciones'));
+    // Evento para el botón de eliminar
+    btnDelete.addEventListener("click", function () {
+        const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
+        const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
+
+        console.log("IDs to delete:", idsToDelete); // Añadido para depuración
+
+        if (idsToDelete.length > 0) {
+            if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
+                deleteItems(idsToDelete, currentView);
+            }
+        } else {
+            alert("Por favor, selecciona al menos un elemento para eliminar.");
+        }
+    });
+
+    function deleteItems(ids, currentView) {
+        console.log("Enviando al backend:", { ids, currentView }); // Añadido para depuración
+
+        fetch('../../backend/php/delete_items.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids, currentView })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Elementos eliminados exitosamente.");
+                // Actualizar la tabla para reflejar los cambios
+                ids.forEach(id => {
+                    const row = document.querySelector(`tr[data-id="${id}"]`);
+                    if (row) row.remove();
+                });
+            } else {
+                alert("Error al eliminar los elementos: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al eliminar los elementos.");
+        });
+    }
+
+    btnBloques?.addEventListener("click", () => {
+        currentView = 'bloques';
+        fetchAndBuildTable('bloques');
+    });
+
+    btnClases?.addEventListener("click", () => {
+        currentView = 'clases';
+        fetchAndBuildTable('clases');
+    });
+
+    btnAsignacion?.addEventListener("click", () => {
+        currentView = 'asignacion';
+        fetchAndBuildTable('asignaciones');
+    });
 
     fetchAndBuildTable('clases');
 
@@ -123,8 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeModal = document.getElementById('close-modal');
     const formContainer = document.getElementById('form-container');
 
-    // Variable para rastrear la vista actual
-    let currentView = 'clases'; // Valores posibles: 'clases', 'bloques', 'asignacion'
+    // La Gran Variable todos inclínense ante su poder majestuosidad se dice que si la variable muere todo lo demás muere y es verdad no la borren xd
 
     // Formulario para cada vista
 
