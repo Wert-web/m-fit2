@@ -22,6 +22,118 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    function handleEnterClick(event) {
+        const button = event.target;
+        const type = button.getAttribute("data-type");
+        const id = button.getAttribute("data-id");
+
+        if (type && id) {
+            localStorage.setItem(`${type}Id`, id);
+            console.log(`ID de ${type} guardado en localStorage:`, id);
+
+            // Redirigir a la nueva página
+            if (type === 'class') {
+                window.location.href = 'visualizer-class.html'; // Reemplaza con la URL de la página de la clase
+            } else if (type === 'block') {
+                window.location.href = 'block_page.html'; // Reemplaza con la URL de la página del bloque
+            }
+        }
+    }
+
+    function buildTable(data) {
+        let rows = "";
+        for (let i = 0; i < data.length; i++) {
+            rows += `
+                <tr>
+                    <td><input type="checkbox" class="row-checkbox"></td>
+                    <td>${data[i].firstContent || "N/A"}</td>
+                    <td>${data[i].secondContent || "Sin descripción"}</td>
+                    <td>${data[i].teirdContent || "Sin fecha"}</td>
+                    <td><button class="btn-entrar" data-type="${data[i].type}" data-id="${data[i].id}">Entrar</button></td>
+                </tr>`;
+        }
+        tableBody.innerHTML = rows;
+
+        // Añadir evento de clic a los botones generados dinámicamente
+        const botonesEntrar = document.querySelectorAll(".btn-entrar");
+        botonesEntrar.forEach(boton => {
+            boton.addEventListener("click", handleEnterClick);
+        });
+
+        bindRowCheckboxEvents();
+        resetCheckboxes();
+    }
+
+    function fetchAndBuildTable(type) {
+        fetch(`../backend/php/get_data.php?type=${type}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            console.log(`${type} obtenidas:`, data);
+            buildTable(data);
+        })
+        .catch(error => console.error(`Error al obtener los ${type}:`, error));
+    }
+
+    function bindRowCheckboxEvents() {
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", function () {
+                const isChecked = selectAllCheckbox.checked;
+                rowCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = isChecked;
+                });
+            });
+        }
+
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+                if (!checkbox.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(rowCheckboxes).every((cb) => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+    }
+
+    function resetCheckboxes() {
+        if (selectAllCheckbox) selectAllCheckbox.checked = false;
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    }
+
+    btnBloques?.addEventListener("click", () => fetchAndBuildTable('bloques'));
+    btnClases?.addEventListener("click", () => fetchAndBuildTable('clases'));
+    btnAsignacion?.addEventListener("click", () => fetchAndBuildTable('asignaciones'));
+
+    fetchAndBuildTable('clases');
+
+
+    toggleButton.addEventListener("click", function () {
+        if (itemList.style.display === "none") {
+            itemList.style.display = "block";
+        } else {
+            itemList.style.display = "none";
+        }
+    });
+
+    if (!tableBody) {
+        console.error("El elemento con id 'myTable' no existe.");
+        return;
+    }
+
     function fetchAndBuildTable(type) {
         fetch(`../backend/php/get_data.php?type=${type}`)
         .then(response => {
@@ -49,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${data[i].firstContent || "N/A"}</td>
                     <td>${data[i].secondContent || "Sin descripción"}</td>
                     <td>${data[i].teirdContent || "Sin fecha"}</td>
-                    <td><button>${data[i].fiveContent || "Acción"}</button></td>
+                    <td><button>${data[i].fiveContent || "Entrar"}</button></td>
                 </tr>`;
         }
         tableBody.innerHTML = rows;
@@ -313,4 +425,19 @@ btnCrear?.addEventListener('click', function () {
         });
     });
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const botonesEntrar = document.querySelectorAll(".btn-entrar");
+
+    botonesEntrar.forEach(boton => {
+        boton.addEventListener("click", function () {
+            const type = boton.getAttribute("data-type");
+            const id = boton.getAttribute("data-id");
+            if (type && id) {
+                localStorage.setItem(`${type}Id`, id);
+                console.log(`ID de ${type} guardado en localStorage:`, id);
+            }
+        });
+    });
 });

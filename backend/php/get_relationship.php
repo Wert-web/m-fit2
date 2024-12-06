@@ -10,19 +10,22 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $id_user = $_SESSION['id_user'];
+$id_class = isset($_GET['id_class']) ? $_GET['id_class'] : '';
 $type = isset($_GET['type']) ? $_GET['type'] : '';
+
+if (!$id_class || !$type) {
+    echo json_encode(['error' => "Faltan parámetros necesarios."]);
+    exit;
+}
 
 try {
     $consulta = '';
     switch ($type) {
-        case 'clases':
-            $consulta = "SELECT id_class AS id, 'class' AS type, name AS firstContent, description AS secondContent, date AS teirdContent FROM class WHERE id_user = :id_user";
-            break;
         case 'bloques':
-            $consulta = "SELECT id_block AS id, 'block' AS type, name AS firstContent, description AS secondContent, date AS teirdContent FROM block WHERE id_user = :id_user";
+            $consulta = "SELECT id_block AS id, name AS firstContent, date AS secondContent FROM block WHERE id_class = :id_class";
             break;
-        case 'asignaciones':
-            $consulta = "SELECT id_asig AS id, 'asignacion' AS type, name AS firstContent, description AS secondContent, date AS teirdContent FROM asig WHERE id_user = :id_user";
+        case 'alumnos':
+            $consulta = "SELECT id_user AS id, name AS firstContent, date AS secondContent FROM user WHERE id_class = :id_class AND type = 0";
             break;
         default:
             echo json_encode(['error' => "Tipo desconocido."]);
@@ -30,11 +33,10 @@ try {
     }
 
     $stmt = $pdo->prepare($consulta);
-    $stmt->execute([':id_user' => $id_user]);
+    $stmt->execute([':id_class' => $id_class]);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($data);
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
 }
-?>
