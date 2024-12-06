@@ -126,66 +126,67 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentView = 'clases'; // Valores posibles: 'clases', 'bloques', 'asignacion'
 
     // Formulario para cada vista
+
     const forms = {
         clases: `
-        <form class="register-form"  >
+        <form class="register-form" id="form-clases" method="POST">
                 <h3>Crear Clase:</h3>
                 <label>Nombre de la Clase:</label>
-                <input type="text" placeholder="Añadir un nombre" />
+                <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Descripcion:</label>
-                <textarea type="text" placeholder="Añadir un descripcion" ></textarea>
+                <textarea name="description" placeholder="Añadir un descripcion" required></textarea>
                 <div>
                     <label>Visibilidad: </label>
-                    <input type="checkbox"/>
+                    <input type="checkbox" name="visibility"/>
                 </div>
-                <button>Enviar</button>
+                <button type="submit">Enviar</button>
             </form>
         `,
         bloques: `
-            <form class="register-form"  >
+            <form class="register-form" id="form-bloques" method="POST">
                 <h3>Crear Bloque:</h3>
                 <label>Nombre del bloque:</label>
-                <input type="text" placeholder="Añadir un nombre" />
+                <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Clases:</label>
-                <select id="destino" name="destino" required>
+                <select id="destino" name="class_id" required>
                     <option value="" disabled selected>Elige una opción</option>
-                    <option value="opcion1">Opción 1</option>
-                    <option value="opcion2">Opción 2</option>
-                    <option value="opcion3">Opción 3</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                    <option value="3">Opción 3</option>
                 </select>
                 <label>Descripcion:</label>
-                <textarea type="text" placeholder="Añadir un descripcion" ></textarea>
+                <textarea name="description" placeholder="Añadir un descripcion" required></textarea>
                 <div>
                     <label>Visibilidad: </label>
-                    <input type="checkbox"/>
+                    <input type="checkbox" name="visibility"/>
                 </div>
-                <button>Enviar</button>
+                <button type="submit">Enviar</button>
             </form>
         `,
         asignacion: `
-            <form class="register-form"  >
+            <form class="register-form" id="form-asignacion" method="POST" enctype="multipart/form-data">
                 <h3>Crear Asignacion:</h3>
                 <label>Nombre de la Asignacion:</label>
-                <input type="text" placeholder="Añadir un nombre" />
+                <input type="text" name="name" placeholder="Añadir un nombre" required />
                 <label>Bloques:</label>
-                <select id="destino" name="destino" required>
+                <select id="destino" name="block_id" required>
                     <option value="" disabled selected>Elige una opción</option>
-                    <option value="opcion1">Opción 1</option>
-                    <option value="opcion2">Opción 2</option>
-                    <option value="opcion3">Opción 3</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                    <option value="3">Opción 3</option>
                 </select>
-                <label for="hora-inicio">Tiempo en minutos:</label>
-                <input type="number" id="tiempo" min="1" placeholder="0">        
+                <label for="tiempo">Tiempo en minutos:</label>
+                <input type="number" id="tiempo" name="time" min="1" placeholder="0" required>        
                 <div>
                     <label>Visibilidad: </label>
-                    <input type="checkbox"/>
+                    <input type="checkbox" name="visibility"/>
                 </div>
                 <label>Cargar la pratica ( .txt):</label>
                 <input type="file" id="archivo" name="archivo" accept=".txt" required>
-                <button>Enviar</button>
+                <button type="submit">Enviar</button>
             </form>
         `
-    };
+    };    
 
     // Función para mostrar el formulario según la vista actual
     function renderForm(view) {
@@ -223,6 +224,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicializa con la vista predeterminada
     renderForm(currentView);
+
+//AJAX CODE
+    document.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        let endpoint = '';
+
+        if (form.id === 'form-clases') {
+            endpoint = '../backend/php/create_class.php';
+        } else if (form.id === 'form-bloques') {
+            endpoint = '../backend/php/create_block.php';
+        } else if (form.id === 'form-asignacion') {
+            endpoint = '../backend/php/create_asignation.php';
+        }
+
+        fetch(endpoint, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            form.reset();
+            modal.style.display = 'none';
+        })
+        .catch(error => console.error('Error:', error));
+    });
 
     // Función para filtrar la tabla según la búsqueda
     searchBar?.addEventListener("input", function () {

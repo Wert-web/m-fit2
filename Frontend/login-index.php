@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mecanografit</title>
     <link rel="stylesheet" href="login.css">
 </head>
+
 <body>
     <div class="container" id="container">
         <div class="form-container sing-up">
-            <form action="../backend/register.php" method="POST">
+            <form action="../backend/php/register.php" method="POST">
                 <h1>Crear tu cuenta</h1>
                 <span>Usa tu correo para registrarte</span>
                 <input type="text" name="name" placeholder="Nombre" required>
-                <input type="text" name="ap_p" placeholder="Apellido Paterno" required>
-                <input type="text" name="ap_m" placeholder="Apellido Materno" required>
                 <input type="password" name="password" placeholder="Contraseña" required>
                 <button type="submit" name="register">Listo</button>
             </form>
         </div>
 
         <div class="form-container sing-in">
-            <form action="login.php" method="POST">
+            <form action="../backend/php/login.php" method="POST">
                 <h1>Iniciar sesión</h1>
                 <span>O usa tu contraseña para acceder</span>
                 <input type="text" name="name" placeholder="Nombre" required>
@@ -47,4 +47,5 @@
     </div>
 </body>
 <script src="login.js"></script>
+
 </html>
