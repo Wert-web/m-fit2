@@ -206,6 +206,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 <h3>Crear Bloque:</h3>
                 <label>Nombre del Bloque:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
+                <label>Clase:</label>
+                <select id="class_id" name="class_id" required>
+                    <option value="" disabled selected>Elige una opción</option>
+                </select>
                 <label>Descripcion:</label>
                 <textarea name="description" placeholder="Añadir una descripción" required></textarea>
                 <div>
@@ -214,7 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <button type="submit">Enviar</button>
             </form>
-
         `,
         asignacion: `
             <form class="register-form" id="form-asignacion" method="POST" enctype="multipart/form-data">

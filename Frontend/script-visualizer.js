@@ -133,44 +133,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicialización
     generarBotones(); // Crear los botones dinámicamente
     actualizarTabla("bloques", localStorage.getItem("classId")); // Mostrar contenido inicial para bloques
-
-
-    // Mostrar/ocultar el menú
-    toggleButton.addEventListener("click", function () {
-        if (itemList.style.display === "none") {
-            itemList.style.display = "block";
-        } else {
-            itemList.style.display = "none";
-        }
-    });
-
-    // Función para manejar clic en "Regresar"
-    btnRegresar.addEventListener("click", function () {
-        // Limpiar IDs del localStorage
-        localStorage.removeItem("classId");
-        localStorage.removeItem("blockId");
-        
-        // Redirigir a la página que me indiques
-        window.location.href = 'idex-teacher.html'; // Reemplaza 'tu_pagina.html' con la URL de la página deseada
-    });
-
-    // Función para manejar clic en "Perfil"
-    btnPerfil.addEventListener("click", function () {
-        // Redirigir a la página de perfil
-        window.location.href = 'profile.html'; // Reemplaza 'perfil.html' con la URL de la página de perfil
-    });
-
-    // Función para manejar clic en "Añadir Maestro"
-    btnAddTeacher.addEventListener("click", function () {
-        // Redirigir a la página para añadir maestro
-        window.location.href = 'añadir_maestro.html'; // Reemplaza 'añadir_maestro.html' con la URL de la página para añadir maestro
-    });
-
-    // Función para manejar clic en "Cerrar Sesión"
-    btnCerrarSesion.addEventListener("click", function () {
-        // Limpiar sesión y redirigir a la página de login
-        // Aquí puedes añadir cualquier lógica adicional para cerrar sesión en el servidor
-        localStorage.clear(); // Limpiar todos los datos del localStorage
-        window.location.href = 'login-index.php'; // Reemplaza 'login.html' con la URL de la página de login
-    });
 });
