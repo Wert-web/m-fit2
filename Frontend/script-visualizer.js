@@ -1,26 +1,54 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const btnNavContainer = document.querySelector(".btn-nav-container"); // Contenedor de botones
-    const tableHead = document.querySelector(".content-table thead tr"); // Cabeceras de la tabla
-    const tableBody = document.querySelector("#myTable"); // Cuerpo de la tabla
-    const selectAllCheckbox = document.getElementById("select-all"); // Checkbox para seleccionar todos
+    const btnNavContainer = document.querySelector(".btn-nav-container");
+    const tableHead = document.querySelector(".content-table thead tr");
+    const tableBody = document.querySelector("#myTable");
+    const selectAllCheckbox = document.getElementById("select-all");
     const toggleButton = document.getElementById("toggleButton");
+    const itemList = document.getElementById("itemlist");
 
-    const botonesConfig = [
-        { id: "btn-bloques", texto: "Bloques" },
-        { id: "btn-alumnos", texto: "Alumnos" },
-        { id: "btn-asignaciones", texto: "Asignaciones" }, // Añadido para asignaciones
-    ];
+    // Asegúrate de que el toggleButton exista antes de agregar el evento
+    if (toggleButton) {
+        toggleButton.addEventListener("click", function () {
+            if (itemList.style.display === "none") {
+                itemList.style.display = "block"; // Mostrar el menú
+            } else {
+                itemList.style.display = "none"; // Ocultar el menú
+            }
+        });
+    } else {
+        console.error("toggleButton no encontrado.");
+    }
 
-    function generarBotones() {
+    function getCurrentViewFromLocalStorage() {
+        if (localStorage.getItem("blockId")) return "bloques";
+        if (localStorage.getItem("classId")) return "clases";
+        return null;
+    }
+
+    const currentView = getCurrentViewFromLocalStorage();
+
+    const botonesConfig = {
+        clases: [
+            { id: "btn-bloques", texto: "Bloques" },
+            { id: "btn-alumnos", texto: "Alumnos" }
+        ],
+        bloques: [
+            { id: "btn-asignaciones", texto: "Asignaciones" }
+        ]
+    };
+
+    function generarBotones(view) {
         btnNavContainer.innerHTML = ""; // Limpiar botones previos
-        botonesConfig.forEach((boton) => {
+        const botones = botonesConfig[view] || []; // Obtener botones específicos de la vista
+
+        botones.forEach(boton => {
             const btnElement = document.createElement("button");
-            btnElement.className = "btn-nav"; // Clase para estilo
+            btnElement.className = "btn-nav";
             btnElement.id = boton.id;
             btnElement.textContent = boton.texto;
 
             btnElement.addEventListener("click", () => {
-                const tipo = boton.id.split("-")[1]; // Extraer tipo (e.g., bloques, alumnos, asignaciones)
+                const tipo = boton.id.split("-")[1];
                 const id = tipo === 'asignaciones' ? localStorage.getItem("blockId") : localStorage.getItem("classId");
                 if (!id) {
                     console.error(`No se encontró ningún ID de ${tipo === 'asignaciones' ? 'block' : 'class'} en localStorage.`);
@@ -34,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function actualizarTabla(tipo, id) {
-        fetch(`../../backend/php/get_relations.php?id_${tipo === 'asignaciones' ? 'block' : 'class'}=${id}&type=${tipo}`)
+        fetch(`../backend/php/get_relations.php?id_${tipo === 'asignaciones' ? 'block' : 'class'}=${id}&type=${tipo}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -45,6 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.error) {
                 throw new Error(data.error);
             }
+            if (!Array.isArray(data)) {
+                console.error("El formato de los datos recibidos no es un arreglo.");
+                data = []; 
+            }
             console.log(`${tipo} obtenidas:`, data);
             buildTable(data, tipo);
         })
@@ -53,14 +85,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function buildTable(data, tipo) {
         let cabeceras, filas;
-    
+
         if (!data || !Array.isArray(data)) {
             console.error("Los datos no son un arreglo o están indefinidos.");
             tableBody.innerHTML = "<tr><td colspan='5'>No se encontraron datos.</td></tr>";
             return;
         }
-    
+
         if (tipo === 'bloques') {
+            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Visible", "Acción"];
             filas = data.map(fila => `
                 <tr data-id="${fila.id}">
                     <td><input type="checkbox" class="row-checkbox"></td>
@@ -75,8 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
             filas = data.map(fila => `
                 <tr>
                     <td><input type="checkbox" class="row-checkbox"></td>
-                    <td>${fila.firstContent || "N/A"}</td>
-                    <td>${fila.secondContent || "Sin fecha"}</td>
+                    <td>${fila.name || "N/A"}</td>
+                    <td>${fila.date || "Sin fecha"}</td>
                     <td><button>Detalles</button></td>
                 </tr>
             `);
@@ -93,17 +126,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 </tr>
             `);
         }
-    
-        // Actualizar cabeceras
-        tableHead.innerHTML = cabeceras ? cabeceras.map(cabecera => `<th>${cabecera}</th>`).join("") : "";
-    
-        // Actualizar filas
+
+        tableHead.innerHTML = cabeceras.map(cabecera => `<th>${cabecera}</th>`).join("");
         tableBody.innerHTML = filas.join("");
-    
+
         bindRowCheckboxEvents();
         resetCheckboxes();
     }
-    
 
     function bindRowCheckboxEvents() {
         const rowCheckboxes = document.querySelectorAll(".row-checkbox");
@@ -138,70 +167,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Inicialización
-    generarBotones(); // Crear los botones dinámicamente
-    actualizarTabla("bloques", localStorage.getItem("classId")); // Mostrar contenido inicial para bloques
-
-
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const btnDelete = document.getElementById("btn-delete");
-
-    // Manejar evento del botón de eliminar
-    btnDelete.addEventListener("click", function () {
-        const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
-        const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
-
-        console.log("IDs para eliminar:", idsToDelete); // Depuración
-
-        if (idsToDelete.length > 0) {
-            if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
-                const currentView = getCurrentViewFromLocalStorage();
-                if (!currentView) {
-                    alert("No se pudo determinar la vista actual.");
-                    return;
-                }
-                deleteItems(idsToDelete, currentView);
-            }
-        } else {
-            alert("Por favor, selecciona al menos un elemento para eliminar.");
+    if (currentView) {
+        generarBotones(currentView);
+        if (currentView === 'clases') {
+            actualizarTabla("bloques", localStorage.getItem("classId"));
+        } else if (currentView === 'bloques') {
+            actualizarTabla("asignaciones", localStorage.getItem("blockId"));
         }
-    });
-
-    // Obtener la vista actual desde el localStorage
-    function getCurrentViewFromLocalStorage() {
-        // Puedes personalizar esto según cómo manejes las vistas
-        if (localStorage.getItem("blockId")) return "bloques";
-        if (localStorage.getItem("classId")) return "clases";
-        if (localStorage.getItem("asigId")) return "asignacion";
-        return null;
     }
 
-    // Enviar los datos al backend para eliminar
-    function deleteItems(ids, currentView) {
-        fetch('../backend/php/delete_items.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ids, currentView })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Elementos eliminados exitosamente.");
-                    // Actualizar la tabla para reflejar los cambios
-                    ids.forEach(id => {
-                        const row = document.querySelector(`tr[data-id="${id}"]`);
-                        if (row) row.remove();
-                    });
-                } else {
-                    alert("Error al eliminar los elementos: " + data.error);
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Ocurrió un error al eliminar los elementos.");
-            });
+    // Navegación de los botones adicionales
+    const btnRegresar = document.getElementById("btn-regresar");
+    const btnPerfil = document.getElementById("btn-perfil");
+    const btnCerrarSesion = document.getElementById("btn-cerrar-sesion");
+
+    if (btnRegresar) {
+        btnRegresar.addEventListener("click", function () {
+            localStorage.removeItem("classId");
+            localStorage.removeItem("blockId");
+            window.location.href = 'index-teacher.html'; // Reemplaza con la URL deseada
+        });
+    }
+
+    if (btnPerfil) {
+        btnPerfil.addEventListener("click", function () {
+            window.location.href = 'profile.html'; // Reemplaza con la URL de perfil
+        });
+    }
+
+    if (btnCerrarSesion) {
+        btnCerrarSesion.addEventListener("click", function () {
+            localStorage.clear();
+            window.location.href = 'login-index.php'; // Reemplaza con la URL de login
+        });
     }
 });
