@@ -54,9 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function buildTable(data, tipo) {
         let cabeceras, filas;
         if (tipo === 'bloques') {
-            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Visible", "Acción"];
             filas = data.map(fila => `
-                <tr>
+                <tr data-id="${fila.id}">
                     <td><input type="checkbox" class="row-checkbox"></td>
                     <td>${fila.firstContent || "N/A"}</td>
                     <td>${fila.secondContent || "Sin fecha"}</td>
@@ -64,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td><button>Detalles</button></td>
                 </tr>
             `);
-        } else if (tipo === 'alumnos') {
+        }
+         else if (tipo === 'alumnos') {
             cabeceras = ["Seleccionar", "Nombre", "Fecha", "Acción"];
             filas = data.map(fila => `
                 <tr>
@@ -133,4 +133,68 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicialización
     generarBotones(); // Crear los botones dinámicamente
     actualizarTabla("bloques", localStorage.getItem("classId")); // Mostrar contenido inicial para bloques
+
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnDelete = document.getElementById("btn-delete");
+
+    // Manejar evento del botón de eliminar
+    btnDelete.addEventListener("click", function () {
+        const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
+        const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
+
+        console.log("IDs para eliminar:", idsToDelete); // Depuración
+
+        if (idsToDelete.length > 0) {
+            if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
+                const currentView = getCurrentViewFromLocalStorage();
+                if (!currentView) {
+                    alert("No se pudo determinar la vista actual.");
+                    return;
+                }
+                deleteItems(idsToDelete, currentView);
+            }
+        } else {
+            alert("Por favor, selecciona al menos un elemento para eliminar.");
+        }
+    });
+
+    // Obtener la vista actual desde el localStorage
+    function getCurrentViewFromLocalStorage() {
+        // Puedes personalizar esto según cómo manejes las vistas
+        if (localStorage.getItem("blockId")) return "bloques";
+        if (localStorage.getItem("classId")) return "clases";
+        if (localStorage.getItem("asigId")) return "asignacion";
+        return null;
+    }
+
+    // Enviar los datos al backend para eliminar
+    function deleteItems(ids, currentView) {
+        fetch('../backend/php/delete_items.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids, currentView })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Elementos eliminados exitosamente.");
+                    // Actualizar la tabla para reflejar los cambios
+                    ids.forEach(id => {
+                        const row = document.querySelector(`tr[data-id="${id}"]`);
+                        if (row) row.remove();
+                    });
+                } else {
+                    alert("Error al eliminar los elementos: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Ocurrió un error al eliminar los elementos.");
+            });
+    }
 });

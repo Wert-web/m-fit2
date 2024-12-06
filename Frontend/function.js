@@ -209,4 +209,39 @@ const toggleButton = document.getElementById("toggleButton");
             }
             });
 
+//hasta aqui jala:
+
+    const currentHandImage = document.getElementById("current-hand-image"); // Imagen de la posición de la mano actual
+    
+    // Mapeo de letras a imágenes de las manos
+    const handImageMapping = {
+        a: "left_pinky.jpg", b: "left_index.jpg", c: "left_middle.jpg", 
+        d: "left_index.jpg", e: "left_middle.jpg", f: "left_index.jpg", 
+        g: "left_index.jpg", h: "right_index.jpg", i: "right_middle.jpg", 
+        j: "right_index.jpg", k: "right_middle.jpg", l: "right_ring.jpg", 
+        m: "right_index.jpg", n: "right_index.jpg", o: "right_ring.jpg", 
+        p: "right_pinky.jpg", q: "left_pinky.jpg", r: "left_index.jpg", 
+        s: "left_ring.jpg", t: "left_index.jpg", u: "right_index.jpg", 
+        v: "left_index.jpg", w: "left_ring.jpg", x: "left_ring.jpg", 
+        y: "right_index.jpg", z: "left_pinky.jpg"
+    };
+
+    // Actualizar la tecla que debe presionarse y cambiar la imagen
+    function updateKeyDisplay() {
+        const currentWord = words[currentWordIndex] || ""; // Palabra actual
+        const currentChar = currentWord[currentCharIndex] || ""; // Carácter actual
+        keySpan.textContent = currentChar.toUpperCase(); // Mostrar la letra actual
+
+        // Cambiar la imagen según la letra actual
+        if (currentChar) {
+            currentHandImage.src = `images/hands/${handImageMapping[currentChar.toLowerCase()]}`;
+            currentHandImage.alt = `Posición de la mano para ${currentChar.toUpperCase()}`;
+        } else {
+            currentHandImage.src = "";
+            currentHandImage.alt = "Sin letra";
+        }
+    }
+
+    // Asegúrate de llamar a updateKeyDisplay cuando corresponda
+            
 });
