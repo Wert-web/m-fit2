@@ -297,9 +297,53 @@ const toggleButton = document.getElementById("toggleButton");
         }
     }    
 
-    // Asegúrate de llamar a updateKeyDisplay cuando corresponda
-            
+//Limite
 
+const asigContainer = document.querySelector(".asig-container-btn .style-list");
 
-    
+// Obtener el id_block de localStorage
+const blockId = localStorage.getItem("blockId");
+
+if (blockId) {
+    // Llamada a la función para obtener las asignaciones del bloque
+    fetch('../backend/php/get_block_asig.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id_block: blockId })
+    })
+    .then(response => {
+        console.log('Response:', response); // Añadir esto para depuración
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.text(); // Usar text() para depuración adicional
+    })
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (data.success) {
+                populateAsigButtons(data.asigs);
+            } else {
+                console.error("Error al obtener las asignaciones:", data.message);
+            }
+        } catch (e) {
+            throw new Error('Error parsing JSON: ' + e.message + ' - Response: ' + text);
+        }
+    })
+    .catch(error => console.error("Error al obtener las asignaciones:", error));
+}
+
+// Función para generar los botones de asignación
+function populateAsigButtons(asigs) {
+    asigContainer.innerHTML = "";
+    asigs.forEach(asig => {
+        const li = document.createElement("li");
+        const button = document.createElement("button");
+        button.textContent = asig.name;
+        li.appendChild(button);
+        asigContainer.appendChild(li);
+    });
+}
 });

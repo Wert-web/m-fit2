@@ -259,4 +259,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Llamar a la función para obtener las clases del usuario
     fetchUserClasses();
+
+    function populateClassBlocks(blocks) {
+        const cardContainer = document.querySelector(".card-container");
+        cardContainer.innerHTML = "";
+        blocks.forEach(block => {
+            const card = document.createElement("div");
+            card.className = "item-card";
+            card.innerHTML = `
+                <div class="item-info-card">
+                    <h3>${block.name}</h3>
+                    <p>${block.description}</p>
+                    <div>
+                        <button class="generic-button" data-id-block="${block.id_block}"><span>Entrar</span></button>
+                    </div>
+                </div>
+            `;
+            card.querySelector(".generic-button").addEventListener("click", function () {
+                const blockId = this.getAttribute("data-id-block");
+                console.log(`Entrar al bloque ${blockId}`); // Depuración
+                localStorage.setItem("blockId", blockId);
+                window.location.href = "index.html"; // Redirige a index.html
+            });
+            cardContainer.appendChild(card);
+        });
+    }
+    
+    
 });
