@@ -224,18 +224,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 <h3>Crear Asignacion:</h3>
                 <label>Nombre de la Asignacion:</label>
                 <input type="text" name="name" placeholder="Añadir un nombre" required />
+                
                 <label>Bloques:</label>
                 <select id="block_id" name="block_id" required>
                     <option value="" disabled selected>Elige una opción</option>
                 </select>
+                
                 <label for="tiempo">Tiempo en minutos:</label>
                 <input type="number" id="tiempo" name="time" min="1" placeholder="0" required>        
+                
                 <div>
                     <label>Visibilidad: </label>
                     <input type="checkbox" name="visibility"/>
                 </div>
+                
                 <label>Cargar la practica ( .txt):</label>
                 <input type="file" id="archivo" name="archivo" accept=".txt" required>
+                
+                <label>Descripción:</label>
+                <textarea name="description" placeholder="Añadir una descripción"></textarea>
+                
                 <button type="submit">Enviar</button>
             </form>
         `

@@ -4,6 +4,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
     $name = trim($_POST['name']);
+    $description = trim($_POST['description']); // Añadir la descripción
     $time = intval($_POST['time']);
     $visibility = isset($_POST['visibility']) ? 1 : 0;
     $block_id = $_POST['block_id'];

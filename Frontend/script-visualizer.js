@@ -2,13 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.getElementById("myTable");
     const searchBar = document.getElementById("search-bar");
     const btnBloques = document.getElementById("btn-bloques");
-    const btnClases = document.getElementById("btn-clases");
-    const btnAsignacion = document.getElementById("btn-asignacion");
+    const btnClases = document.getElementById("btn-alumnos");
     const btnCrear = document.getElementById("btn-crear");
     const modal = document.getElementById('modal-crear');
     const closeModal = document.getElementById('close-modal');
     const formContainer = document.getElementById('form-container');
-    let currentView = 'clases'; // Vista actual (clases, bloques, asignaciones)
+    let currentView = 'clases'; // Vista actual (clases, bloques, usuarios)
     let id_class = localStorage.getItem('classId'); // ID de la clase seleccionada
 
     if (!id_class) {
@@ -22,11 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
         data.forEach((item) => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><input type="checkbox" class="row-checkbox" data-id="${item.id}"></td>
+                <td><input type="checkbox" class="row-checkbox" data-id="${item.id_class_block || item.id_class_user}"></td>
                 <td>${item.name || "N/A"}</td>
                 <td>${item.description || "Sin descripción"}</td>
                 <td>${item.date || "Sin fecha"}</td>
-                <td><button class="btn-entrar" data-id="${item.id}" data-type="${currentView}">Entrar</button></td>
+                <td><button class="btn-entrar" data-id="${item.id_class_block || item.id_class_user}" data-type="${currentView}">Entrar</button></td>
             `;
             tableBody.appendChild(row);
         });
@@ -41,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert(`Error: ${data.error}`);
                     return;
                 }
-                buildTable(data.data);
+                buildTable(data);
             })
             .catch((error) => console.error("Error al obtener datos:", error));
     }
@@ -49,17 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Eventos para botones de navegación
     btnBloques.addEventListener("click", () => {
         currentView = 'bloques';
-        fetchAndBuildTable('bloques');
+        fetchAndBuildTable('class_block');
     });
 
     btnClases.addEventListener("click", () => {
-        currentView = 'clases';
-        fetchAndBuildTable('clases');
-    });
-
-    btnAsignacion.addEventListener("click", () => {
-        currentView = 'alumnos'; // Cambiar a asignaciones si corresponde
-        fetchAndBuildTable('alumnos');
+        currentView = 'usuarios';
+        fetchAndBuildTable('class_user');
     });
 
     // Evento de búsqueda
@@ -92,5 +86,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Cargar vista inicial
-    fetchAndBuildTable('clases');
+    fetchAndBuildTable('class_user');
 });
