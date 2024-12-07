@@ -51,7 +51,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnDelete) {
         btnDelete.addEventListener("click", function() {
             const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
-            const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
+            const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => {
+                const row = checkbox.closest('tr');
+                return row ? row.dataset.id : null;
+            }).filter(id => id !== null); // Eliminar valores nulos
+            
 
             console.log("IDs para eliminar:", idsToDelete); // Depuración
             console.log("boton presionado");
@@ -73,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tableBody.innerHTML = ""; // Limpiar tabla
         data.forEach((item) => {
             const row = document.createElement("tr");
+            row.dataset.id = item.id_class_block || item.id_class_user; // Asegurarse de agregar el dataset.id
             row.innerHTML = `
                 <td><input type="checkbox" class="row-checkbox" data-id="${item.id_class_block || item.id_class_user}"></td>
                 <td>${item.name || "N/A"}</td>
@@ -82,16 +87,16 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
             tableBody.appendChild(row);
         });
-
+    
         // Añadir evento de clic a los botones generados dinámicamente
         const botonesEntrar = document.querySelectorAll(".btn-entrar");
         botonesEntrar.forEach(boton => {
             boton.addEventListener("click", handleEnterClick);
         });
-
+    
         bindRowCheckboxEvents();
         resetCheckboxes();
-    }
+    }    
 
     // Función para obtener datos desde el backend
     function fetchAndBuildTable(type) {
