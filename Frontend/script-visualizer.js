@@ -17,6 +17,57 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // Función para eliminar elementos seleccionados
+    function deleteItems(ids) {
+        console.log("Enviando al backend:", { ids, currentView }); // Añadido para depuración
+
+        fetch('../backend/php/delete_class_items.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids, currentView })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Elementos eliminados exitosamente.");
+                // Actualizar la tabla para reflejar los cambios
+                ids.forEach(id => {
+                    const row = document.querySelector(`tr[data-id="${id}"]`);
+                    if (row) row.remove();
+                });
+            } else {
+                alert("Error al eliminar los elementos: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al eliminar los elementos.");
+        });
+    }
+
+    // Evento para el botón de eliminar
+    if (btnDelete) {
+        btnDelete.addEventListener("click", function() {
+            const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
+            const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
+
+            console.log("IDs para eliminar:", idsToDelete); // Depuración
+            console.log("boton presionado");
+
+            if (idsToDelete.length > 0) {
+                if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
+                    deleteItems(idsToDelete);
+                }
+            } else {
+                alert("Por favor, selecciona al menos un elemento para eliminar.");
+            }
+        });
+    } else {
+        console.error("Botón de eliminar no encontrado");
+    }
+
     // Función para construir la tabla
     function buildTable(data) {
         tableBody.innerHTML = ""; // Limpiar tabla
@@ -124,53 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         rowCheckboxes.forEach((checkbox) => {
             checkbox.checked = false;
         });
-    }
-
-    // Evento para el botón de eliminar
-    btnDelete.addEventListener("click", function () {
-        const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
-        const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
-
-        console.log("IDs para eliminar:", idsToDelete); // Depuración
-
-        if (idsToDelete.length > 0) {
-            if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
-                deleteItems(idsToDelete);
-            }
-        } else {
-            alert("Por favor, selecciona al menos un elemento para eliminar.");
-        }
-    });
-
-    // Función para eliminar elementos seleccionados
-    function deleteItems(ids) {
-        console.log("Enviando al backend:", { ids, currentView }); // Añadido para depuración
-
-        fetch('../backend/php/delete_class_items.php', { // Cambiado a delete_class_items.php
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ids, currentView })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Elementos eliminados exitosamente.");
-                // Actualizar la tabla para reflejar los cambios
-                ids.forEach(id => {
-                    const row = document.querySelector(`tr[data-id="${id}"]`);
-                    if (row) row.remove();
-                });
-            } else {
-                alert("Error al eliminar los elementos: " + data.error);
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Ocurrió un error al eliminar los elementos.");
-        });
-    }
+    }    
 
     // Función para mostrar el formulario según la vista actual
     function renderForm(view) {
@@ -203,4 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar vista inicial
     fetchAndBuildTable('class_user');
+
+    
+
 });

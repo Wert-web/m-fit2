@@ -36,13 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $placeholders = rtrim(str_repeat('?,', count($ids)), ',');
         $stmt = $pdo->prepare("DELETE FROM $table WHERE $column IN ($placeholders)");
+        if (!$stmt) {
+            echo json_encode(['error' => 'Error al preparar la consulta: ' . implode(" ", $pdo->errorInfo())]);
+            exit;
+        }
 
         if ($stmt->execute($ids)) {
             $pdo->commit();
-            echo json_encode(['success' => true]);
+            echo json_encode(['success' => true, 'message' => "Elementos eliminados: " . implode(', ', $ids)]);
         } else {
             $pdo->rollBack();
-            echo json_encode(['error' => "Error al ejecutar la eliminación."]);
+            echo json_encode(['error' => "Error al ejecutar la eliminación.", 'debug' => $stmt->errorInfo()]);
         }
     } catch (Exception $e) {
         $pdo->rollBack();
