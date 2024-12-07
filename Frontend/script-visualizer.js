@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => console.error("Error al obtener datos:", error));
     }
 
-    // Función para manejar clic en botones de entrada CAMBIAR DESPUES
+    // Función para manejar clic en botones de entrada
     function handleEnterClick(event) {
         const button = event.target;
         const type = button.getAttribute("data-type");
@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
         const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
 
-        console.log("IDs to delete:", idsToDelete); // Añadido para depuración
+        console.log("IDs para eliminar:", idsToDelete); // Depuración
 
         if (idsToDelete.length > 0) {
             if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
@@ -177,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const forms = {
             bloques: `
                 <form class="register-form" id="form-bloques" method="POST">
+                    <!-- Tu formulario de creación de bloques aquí -->
                 </form>
             `
         };
