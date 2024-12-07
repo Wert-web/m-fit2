@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchBar = document.getElementById("search-bar");
     const btnBloques = document.getElementById("btn-bloques");
     const btnClases = document.getElementById("btn-alumnos");
-    const btnCrear = document.getElementById("btn-crear");
+    const btnCrear = document.getElementById("btn-modify"); // Botón para añadir relación
+    const btnDelete = document.getElementById("btn-delete");
+    const selectAllCheckbox = document.getElementById("select-all");
     const modal = document.getElementById('modal-crear');
     const closeModal = document.getElementById('close-modal');
     const formContainer = document.getElementById('form-container');
@@ -29,6 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
             tableBody.appendChild(row);
         });
+
+        // Añadir evento de clic a los botones generados dinámicamente
+        const botonesEntrar = document.querySelectorAll(".btn-entrar");
+        botonesEntrar.forEach(boton => {
+            boton.addEventListener("click", handleEnterClick);
+        });
+
+        bindRowCheckboxEvents();
+        resetCheckboxes();
     }
 
     // Función para obtener datos desde el backend
@@ -43,6 +54,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 buildTable(data);
             })
             .catch((error) => console.error("Error al obtener datos:", error));
+    }
+
+    // Función para manejar clic en botones de entrada CAMBIAR DESPUES
+    function handleEnterClick(event) {
+        const button = event.target;
+        const type = button.getAttribute("data-type");
+        const id = button.getAttribute("data-id");
+
+        if (type && id) {
+            localStorage.setItem(`${type}Id`, id);
+            console.log(`ID de ${type} guardado en localStorage:`, id);
+
+            // Redirigir siempre a visualizer-class.html
+            window.location.href = 'visualizer-class.html';
+        }
     }
 
     // Eventos para botones de navegación
@@ -66,23 +92,112 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Función para cerrar el modal
-    closeModal.addEventListener("click", () => {
-        modal.style.display = "none";
+    // Función para vincular eventos de checkboxes de fila
+    function bindRowCheckboxEvents() {
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", function () {
+                const isChecked = selectAllCheckbox.checked;
+                rowCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = isChecked;
+                });
+            });
+        }
+
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+                if (!checkbox.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(rowCheckboxes).every((cb) => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+    }
+
+    // Función para reiniciar los checkboxes
+    function resetCheckboxes() {
+        if (selectAllCheckbox) selectAllCheckbox.checked = false;
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+        rowCheckboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    }
+
+    // Evento para el botón de eliminar
+    btnDelete.addEventListener("click", function () {
+        const selectedCheckboxes = document.querySelectorAll(".row-checkbox:checked");
+        const idsToDelete = Array.from(selectedCheckboxes).map(checkbox => checkbox.closest('tr').dataset.id);
+
+        console.log("IDs to delete:", idsToDelete); // Añadido para depuración
+
+        if (idsToDelete.length > 0) {
+            if (confirm("¿Estás seguro de que deseas eliminar los elementos seleccionados?")) {
+                deleteItems(idsToDelete);
+            }
+        } else {
+            alert("Por favor, selecciona al menos un elemento para eliminar.");
+        }
     });
 
-    // Abrir modal para crear
-    btnCrear.addEventListener("click", () => {
-        formContainer.innerHTML = `
-            <form id="form-${currentView}">
-                <h3>Crear ${currentView}:</h3>
-                <label>Nombre:</label>
-                <input type="text" name="name" required>
-                <label>Descripción:</label>
-                <textarea name="description" required></textarea>
-                <button type="submit">Guardar</button>
-            </form>`;
-        modal.style.display = "block";
+    // Función para eliminar elementos seleccionados
+    function deleteItems(ids) {
+        console.log("Enviando al backend:", { ids, currentView }); // Añadido para depuración
+
+        fetch('../backend/php/delete_class_items.php', { // Cambiado a delete_class_items.php
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids, currentView })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Elementos eliminados exitosamente.");
+                // Actualizar la tabla para reflejar los cambios
+                ids.forEach(id => {
+                    const row = document.querySelector(`tr[data-id="${id}"]`);
+                    if (row) row.remove();
+                });
+            } else {
+                alert("Error al eliminar los elementos: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al eliminar los elementos.");
+        });
+    }
+
+    // Función para mostrar el formulario según la vista actual
+    function renderForm(view) {
+        const forms = {
+            bloques: `
+                <form class="register-form" id="form-bloques" method="POST">
+                </form>
+            `
+        };
+        formContainer.innerHTML = forms[view] || `<p>Formulario no disponible.</p>`;
+    }
+
+    // Botón Añadir Relación abre el modal y muestra el formulario de bloques
+    btnCrear.addEventListener('click', function () {
+        renderForm('bloques');
+        modal.style.display = 'block';
+    });
+
+    // Cerrar el modal
+    closeModal.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
     });
 
     // Cargar vista inicial
