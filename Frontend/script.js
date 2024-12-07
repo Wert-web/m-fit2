@@ -9,15 +9,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnCrear = document.getElementById('btn-crear');
     const btnDelete = document.getElementById("btn-delete");
     const toggleButton = document.getElementById("toggleButton");
+    const btnPerfil = document.getElementById("btn-perfil");
+    const btnCerrarSesion = document.getElementById("btn-cerrar-sesion");
     let currentView = 'clases'; // Valores posibles: 'clases', 'bloques', 'asignacion'
 
-    toggleButton.addEventListener("click", function () {
-        if (itemList.style.display === "none") {
-            itemList.style.display = "block";
-        } else {
-            itemList.style.display = "none";
-        }
-    });
+    // Asegurarse de que el botón y el elemento se seleccionan correctamente
+    if (toggleButton && itemList) {
+        toggleButton.addEventListener("click", function () {
+            if (itemList.style.display === "none") {
+                itemList.style.display = "block";
+            } else {
+                itemList.style.display = "none";
+            }
+            console.log("Botón de toggle presionado"); // Depuración
+        });
+    } else {
+        if (!toggleButton) console.error("Botón de toggle no encontrado");
+        if (!itemList) console.error("itemList no encontrado");
+    }
 
     if (!tableBody) {
         console.error("El elemento con id 'myTable' no existe.");
@@ -402,6 +411,49 @@ btnCrear?.addEventListener('click', function () {
             }
         });
     });
+
+        // Función para redirigir a una página específica
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+    
+        // Botón de Perfil
+        if (btnPerfil) {
+            btnPerfil.addEventListener("click", function () {
+                redirectTo("profile.html"); // Cambia "pagina-perfil.html" a la URL de la página de perfil
+            });
+        } else {
+            console.error("Botón de Perfil no encontrado");
+        }
+    
+        // Botón de Cerrar Sesión
+        if (btnCerrarSesion) {
+            btnCerrarSesion.addEventListener("click", function () {
+                // Lógica para cerrar sesión, por ejemplo, hacer una solicitud al backend para destruir la sesión
+                fetch('../backend/php/logout.php', { // Cambia la URL a tu script de cierre de sesión
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Sesión cerrada exitosamente.");
+                        // Redirigir al usuario a la página de inicio de sesión u otra página adecuada
+                        redirectTo("login-index.php"); // Cambia "pagina-login.html" a la URL de la página de inicio de sesión
+                    } else {
+                        alert("Error al cerrar la sesión: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al cerrar la sesión:", error);
+                    alert("Ocurrió un error al cerrar la sesión.");
+                });
+            });
+        } else {
+            console.error("Botón de Cerrar Sesión no encontrado");
+        }
 
 });
 
