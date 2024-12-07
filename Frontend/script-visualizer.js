@@ -1,204 +1,96 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const btnNavContainer = document.querySelector(".btn-nav-container");
-    const tableHead = document.querySelector(".content-table thead tr");
-    const tableBody = document.querySelector("#myTable");
-    const selectAllCheckbox = document.getElementById("select-all");
-    const toggleButton = document.getElementById("toggleButton");
-    const itemList = document.getElementById("itemlist");
+    const tableBody = document.getElementById("myTable");
+    const searchBar = document.getElementById("search-bar");
+    const btnBloques = document.getElementById("btn-bloques");
+    const btnClases = document.getElementById("btn-clases");
+    const btnAsignacion = document.getElementById("btn-asignacion");
+    const btnCrear = document.getElementById("btn-crear");
+    const modal = document.getElementById('modal-crear');
+    const closeModal = document.getElementById('close-modal');
+    const formContainer = document.getElementById('form-container');
+    let currentView = 'clases'; // Vista actual (clases, bloques, asignaciones)
+    let id_class = localStorage.getItem('classId'); // ID de la clase seleccionada
 
-    // Asegúrate de que el toggleButton exista antes de agregar el evento
-    if (toggleButton) {
-        toggleButton.addEventListener("click", function () {
-            if (itemList.style.display === "none") {
-                itemList.style.display = "block"; // Mostrar el menú
-            } else {
-                itemList.style.display = "none"; // Ocultar el menú
-            }
+    if (!id_class) {
+        alert("No se ha seleccionado ninguna clase.");
+        return;
+    }
+
+    // Función para construir la tabla
+    function buildTable(data) {
+        tableBody.innerHTML = ""; // Limpiar tabla
+        data.forEach((item) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><input type="checkbox" class="row-checkbox" data-id="${item.id}"></td>
+                <td>${item.name || "N/A"}</td>
+                <td>${item.description || "Sin descripción"}</td>
+                <td>${item.date || "Sin fecha"}</td>
+                <td><button class="btn-entrar" data-id="${item.id}" data-type="${currentView}">Entrar</button></td>
+            `;
+            tableBody.appendChild(row);
         });
-    } else {
-        console.error("toggleButton no encontrado.");
     }
 
-    function getCurrentViewFromLocalStorage() {
-        if (localStorage.getItem("blockId")) return "bloques";
-        if (localStorage.getItem("classId")) return "clases";
-        return null;
-    }
-
-    const currentView = getCurrentViewFromLocalStorage();
-
-    const botonesConfig = {
-        clases: [
-            { id: "btn-bloques", texto: "Bloques" },
-            { id: "btn-alumnos", texto: "Alumnos" }
-        ],
-        bloques: [
-            { id: "btn-asignaciones", texto: "Asignaciones" }
-        ]
-    };
-
-    function generarBotones(view) {
-        btnNavContainer.innerHTML = ""; // Limpiar botones previos
-        const botones = botonesConfig[view] || []; // Obtener botones específicos de la vista
-
-        botones.forEach(boton => {
-            const btnElement = document.createElement("button");
-            btnElement.className = "btn-nav";
-            btnElement.id = boton.id;
-            btnElement.textContent = boton.texto;
-
-            btnElement.addEventListener("click", () => {
-                const tipo = boton.id.split("-")[1];
-                const id = tipo === 'asignaciones' ? localStorage.getItem("blockId") : localStorage.getItem("classId");
-                if (!id) {
-                    console.error(`No se encontró ningún ID de ${tipo === 'asignaciones' ? 'block' : 'class'} en localStorage.`);
+    // Función para obtener datos desde el backend
+    function fetchAndBuildTable(type) {
+        fetch(`../backend/php/get_relations.php?id_class=${id_class}&type=${type}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert(`Error: ${data.error}`);
                     return;
                 }
-                actualizarTabla(tipo, id);
-            });
+                buildTable(data.data);
+            })
+            .catch((error) => console.error("Error al obtener datos:", error));
+    }
 
-            btnNavContainer.appendChild(btnElement);
+    // Eventos para botones de navegación
+    btnBloques.addEventListener("click", () => {
+        currentView = 'bloques';
+        fetchAndBuildTable('bloques');
+    });
+
+    btnClases.addEventListener("click", () => {
+        currentView = 'clases';
+        fetchAndBuildTable('clases');
+    });
+
+    btnAsignacion.addEventListener("click", () => {
+        currentView = 'alumnos'; // Cambiar a asignaciones si corresponde
+        fetchAndBuildTable('alumnos');
+    });
+
+    // Evento de búsqueda
+    searchBar.addEventListener("input", function () {
+        const searchTerm = searchBar.value.toLowerCase();
+        const rows = tableBody.querySelectorAll("tr");
+        rows.forEach((row) => {
+            const rowText = row.innerText.toLowerCase();
+            row.style.display = rowText.includes(searchTerm) ? "" : "none";
         });
-    }
+    });
 
-    function actualizarTabla(tipo, id) {
-        fetch(`../backend/php/get_relations.php?id_${tipo === 'asignaciones' ? 'block' : 'class'}=${id}&type=${tipo}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            if (!Array.isArray(data)) {
-                console.error("El formato de los datos recibidos no es un arreglo.");
-                data = []; 
-            }
-            console.log(`${tipo} obtenidas:`, data);
-            buildTable(data, tipo);
-        })
-        .catch(error => console.error(`Error al obtener los ${tipo}:`, error));
-    }
+    // Función para cerrar el modal
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
 
-    function buildTable(data, tipo) {
-        let cabeceras, filas;
+    // Abrir modal para crear
+    btnCrear.addEventListener("click", () => {
+        formContainer.innerHTML = `
+            <form id="form-${currentView}">
+                <h3>Crear ${currentView}:</h3>
+                <label>Nombre:</label>
+                <input type="text" name="name" required>
+                <label>Descripción:</label>
+                <textarea name="description" required></textarea>
+                <button type="submit">Guardar</button>
+            </form>`;
+        modal.style.display = "block";
+    });
 
-        if (!data || !Array.isArray(data)) {
-            console.error("Los datos no son un arreglo o están indefinidos.");
-            tableBody.innerHTML = "<tr><td colspan='5'>No se encontraron datos.</td></tr>";
-            return;
-        }
-
-        if (tipo === 'bloques') {
-            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Visible", "Acción"];
-            filas = data.map(fila => `
-                <tr data-id="${fila.id}">
-                    <td><input type="checkbox" class="row-checkbox"></td>
-                    <td>${fila.firstContent || "N/A"}</td>
-                    <td>${fila.secondContent || "Sin fecha"}</td>
-                    <td>${fila.visibility === 1 ? "Sí" : "No"}</td>
-                    <td><button>Detalles</button></td>
-                </tr>
-            `);
-        } else if (tipo === 'alumnos') {
-            cabeceras = ["Seleccionar", "Nombre", "Fecha", "Acción"];
-            filas = data.map(fila => `
-                <tr>
-                    <td><input type="checkbox" class="row-checkbox"></td>
-                    <td>${fila.name || "N/A"}</td>
-                    <td>${fila.date || "Sin fecha"}</td>
-                    <td><button>Detalles</button></td>
-                </tr>
-            `);
-        } else if (tipo === 'asignaciones') {
-            cabeceras = ["Seleccionar", "Nombre de Asignación", "Tiempo", "Archivo", "Visible", "Acción"];
-            filas = data.map(fila => `
-                <tr>
-                    <td><input type="checkbox" class="row-checkbox"></td>
-                    <td>${fila.firstContent || "N/A"}</td>
-                    <td>${fila.secondContent || "Sin tiempo"}</td>
-                    <td>${fila.thirdContent || "Sin archivo"}</td>
-                    <td>${fila.fourthContent === 1 ? "Sí" : "No"}</td>
-                    <td><button>Detalles</button></td>
-                </tr>
-            `);
-        }
-
-        tableHead.innerHTML = cabeceras.map(cabecera => `<th>${cabecera}</th>`).join("");
-        tableBody.innerHTML = filas.join("");
-
-        bindRowCheckboxEvents();
-        resetCheckboxes();
-    }
-
-    function bindRowCheckboxEvents() {
-        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
-
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener("change", function () {
-                const isChecked = selectAllCheckbox.checked;
-                rowCheckboxes.forEach((checkbox) => {
-                    checkbox.checked = isChecked;
-                });
-            });
-        }
-
-        rowCheckboxes.forEach((checkbox) => {
-            checkbox.addEventListener("change", function () {
-                if (!checkbox.checked) {
-                    selectAllCheckbox.checked = false;
-                } else {
-                    const allChecked = Array.from(rowCheckboxes).every((cb) => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
-        });
-    }
-
-    function resetCheckboxes() {
-        if (selectAllCheckbox) selectAllCheckbox.checked = false;
-        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
-        rowCheckboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-        });
-    }
-
-    // Inicialización
-    if (currentView) {
-        generarBotones(currentView);
-        if (currentView === 'clases') {
-            actualizarTabla("bloques", localStorage.getItem("classId"));
-        } else if (currentView === 'bloques') {
-            actualizarTabla("asignaciones", localStorage.getItem("blockId"));
-        }
-    }
-
-    // Navegación de los botones adicionales
-    const btnRegresar = document.getElementById("btn-regresar");
-    const btnPerfil = document.getElementById("btn-perfil");
-    const btnCerrarSesion = document.getElementById("btn-cerrar-sesion");
-
-    if (btnRegresar) {
-        btnRegresar.addEventListener("click", function () {
-            localStorage.removeItem("classId");
-            localStorage.removeItem("blockId");
-            window.location.href = 'index-teacher.html'; // Reemplaza con la URL deseada
-        });
-    }
-
-    if (btnPerfil) {
-        btnPerfil.addEventListener("click", function () {
-            window.location.href = 'profile.html'; // Reemplaza con la URL de perfil
-        });
-    }
-
-    if (btnCerrarSesion) {
-        btnCerrarSesion.addEventListener("click", function () {
-            localStorage.clear();
-            window.location.href = 'login-index.php'; // Reemplaza con la URL de login
-        });
-    }
+    // Cargar vista inicial
+    fetchAndBuildTable('clases');
 });
