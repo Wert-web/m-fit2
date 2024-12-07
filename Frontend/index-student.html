@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Bloques</title>
+</head>
+<body>
+
+    <header class="header-container">
+        <button id="toggleButton" class="menu-button">☰</button>
+        <h2>Bloques</h2>
+    </header>
+
+    <div>
+        <nav>
+            <ul id="itemlist" style="display: none;">
+                <li><button id="btn-perfil">Perfil</button></li>
+                <li><button id="btn-add-class">Registrarse a una clase</button></li>
+                <li><button id="btn-cerrar-sesion">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-container">
+        <div class="btn-nav-container">
+            <!--Se generan a partir de js-->
+        </div>
+        <div class="card-container">
+            <!-- Tarjetas se generarán aquí -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <div id="form-container"></div>
+        </div>
+    </div>
+
+    <script src="script-student.js"></script>
+</body>
+</html>

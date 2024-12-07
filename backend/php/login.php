@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = trim($_POST['contraseña']);
 
         // Consulta para verificar al usuario
-        $consulta = "SELECT * FROM `user` WHERE `name` = :name AND `password` = :password AND `type` = 1";
+        $consulta = "SELECT * FROM `user` WHERE `name` = :name AND `password` = :password";
         $stmt = $pdo->prepare($consulta);
 
         // Ejecutar la consulta con los parámetros
@@ -20,7 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             $_SESSION['id_user'] = $usuario['id_user']; // Guardar el ID del usuario en la sesión
             $_SESSION['name'] = $usuario['name'];
-            header("Location: ../../frontend/index-teacher.html"); // Redirigir al área protegida
+
+            if ($usuario['type'] == 1) {
+                // Redirigir al área protegida para tipo 1
+                header("Location: ../../frontend/index-teacher.html");
+            } elseif ($usuario['type'] == 0) {
+                // Redirigir al área protegida para tipo 0
+                header("Location: ../../frontend/index-student.html");
+            } else {
+                echo "<script>alert('Tipo de usuario desconocido.');</script>";
+            }
             exit();
         } else {
             echo "<script>alert('Usuario o contraseña incorrectos o no autorizado.');</script>";
