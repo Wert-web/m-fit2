@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("El elemento con id 'myTable' no existe.");
         return;
     }
-
     function handleEnterClick(event) {
         const button = event.target;
         const type = button.getAttribute("data-type");
@@ -42,10 +41,15 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem(`${type}Id`, id);
             console.log(`ID de ${type} guardado en localStorage:`, id);
     
-            // Redirigir siempre a visualizer-class.html
-            window.location.href = 'visualizer-class.html';
+            // Redirigir a diferentes páginas según el tipo
+            if (type === "block") {
+                window.location.href = 'visualizer-block.html';
+            } else if (type === "class") {
+                window.location.href = 'visualizer-class.html';
+            }
         }
     }
+    
 
     function buildTable(data) {
         let rows = "";
@@ -60,13 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 </tr>`;
         }
         tableBody.innerHTML = rows;
-
+    
         // Añadir evento de clic a los botones generados dinámicamente
         const botonesEntrar = document.querySelectorAll(".btn-entrar");
         botonesEntrar.forEach(boton => {
             boton.addEventListener("click", handleEnterClick);
         });
-
+    
         bindRowCheckboxEvents();
         resetCheckboxes();
     }

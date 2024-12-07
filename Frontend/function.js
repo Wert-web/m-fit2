@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let timer = null; // Identificador del temporizador
 
     // Cargar el texto desde un archivo .txt
-    function loadTextFromFile() {
-        fetch("text.txt")
+    function loadTextFromFile(filePath) {
+        fetch(filePath)
             .then((response) => response.text())
             .then((text) => {
                 words = text.split(/\s+/); // Separar palabras por espacios y saltos de línea
@@ -342,6 +342,14 @@ function populateAsigButtons(asigs) {
         const li = document.createElement("li");
         const button = document.createElement("button");
         button.textContent = asig.name;
+
+        // Asociar evento al botón
+        button.addEventListener("click", () => {
+            resetPractice(); // Reiniciar práctica antes de cargar nuevo texto
+            const filePath = `../texts/${asig.file_name}`; // Usar file_name para la ruta
+            loadTextFromFile(filePath);
+        });        
+
         li.appendChild(button);
         asigContainer.appendChild(li);
     });

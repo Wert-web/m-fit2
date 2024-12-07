@@ -4,7 +4,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
     $name = trim($_POST['name']);
-    $description = trim($_POST['description']); // Añadir la descripción
+    $description = trim($_POST['description']);
     $time = intval($_POST['time']);
     $visibility = isset($_POST['visibility']) ? 1 : 0;
     $block_id = $_POST['block_id'];
@@ -17,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
     }
     $target_file = $target_dir . basename($_FILES["archivo"]["name"]);
     if (move_uploaded_file($_FILES["archivo"]["tmp_name"], $target_file)) {
-        $consulta = "INSERT INTO asig (name, description, time, document_url, visibility, date) VALUES (:name, :description, :time, :document_url, :visibility, NOW())";
+        $consulta = "INSERT INTO asig (name, description, time, document_url, visibility, id_user, date) VALUES (:name, :description, :time, :document_url, :visibility, :id_user, NOW())";
         $stmt = $pdo->prepare($consulta);
 
-        if ($stmt->execute([':name' => $name, ':description' => $description, ':time' => $time, ':document_url' => $target_file, ':visibility' => $visibility])) {
+        if ($stmt->execute([':name' => $name, ':description' => $description, ':time' => $time, ':document_url' => $target_file, ':visibility' => $visibility, ':id_user' => $id_user])) {
             // Insertar en la tabla block_asig para relacionar la asignación con el bloque
             $id_asig = $pdo->lastInsertId();
             $consulta_block_asig = "INSERT INTO block_asig (id_block, id_asig, id_user) VALUES (:block_id, :asig_id, :id_user)";
