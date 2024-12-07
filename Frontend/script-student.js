@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.success) {
                     alert("Sesión cerrada exitosamente.");
-                    redirectTo("pagina-login.html"); // Cambia "pagina-login.html" a la URL de la página de inicio de sesión
+                    redirectTo("login-index.php"); // Cambia "pagina-login.html" a la URL de la página de inicio de sesión
                 } else {
                     alert("Error al cerrar la sesión: " + data.error);
                 }
@@ -176,17 +176,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // Función para obtener clases del usuario
     function fetchUserClasses() {
         fetch('../backend/php/get_user_class.php')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Clases del usuario obtenidas:', data.classes); // Depuración
-                if (data.success) {
-                    populateClassButtons(data.classes);
-                } else {
-                    alert("Error al obtener las clases: " + data.message);
-                }
-            })
-            .catch(error => console.error("Error al obtener las clases:", error));
+        .then(response => {
+            console.log(response); // Añadir esto para depuración
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            if (!Array.isArray(data.classes)) {
+                throw new Error('La respuesta no es un array válido');
+            }
+            console.log('Clases del usuario obtenidas:', data.classes);
+            populateClassButtons(data.classes);
+        })
+        .catch(error => console.error('Error al obtener las clases:', error));
     }
+    
 
     // Función para rellenar los botones de clases
     function populateClassButtons(classes) {
@@ -204,35 +213,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function fetchClassesForSelect(selectId) {
-        fetch('../backend/php/get_all_class.php')
-        .then(response => {
-            console.log(response); // Añadir esto para depuración
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
+    // Función para obtener bloques de una clase
+    function fetchClassBlocks(idClass) {
+        fetch('../backend/php/get_class_blocks.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_class: idClass })
         })
+        .then(response => response.json())
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
+            console.log('Bloques obtenidos para la clase:', data.blocks); // Depuración
+            if (data.success) {
+                populateClassBlocks(data.blocks);
+            } else {
+                alert("Error al obtener los bloques: " + data.message);
             }
-            if (!Array.isArray(data.classes)) {
-                throw new Error('La respuesta no es un array válido');
-            }
-            console.log('Clases obtenidas:', data.classes);
-            const select = document.getElementById(selectId);
-            select.innerHTML = '<option value="" disabled selected>Elige una opción</option>';
-            data.classes.forEach(classItem => {
-                const option = document.createElement('option');
-                option.value = classItem.id_class;
-                option.textContent = classItem.name;
-                select.appendChild(option);
-            });
         })
-        .catch(error => console.error('Error al obtener las clases:', error));
+        .catch(error => console.error("Error al obtener los bloques:", error));
     }
-    
+
     // Función para rellenar las cartas de bloques
     function populateClassBlocks(blocks) {
         cardContainer.innerHTML = "";
