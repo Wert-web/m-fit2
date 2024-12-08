@@ -10,11 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const forms = {
         addTeacher: `
-            <form id="add-teacher-form" method="POST">
-                <h3>Añadir Maestro:</h3>
-                <label>Nombre:</label>
-                <input type="text" name="name" required>
-                <button type="submit">Enviar</button>
+            <form id="add-teacher-form" action="../backend/php/register_teacher.php" method="POST">
+                <h1>Agregar Maestro</h1>
+                <span>Usa tu nombre para registrarse</span>
+                <input type="text" name="name" placeholder="Nombre" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit" name="register">Listo</button>
             </form>
         `,
         modifyRelation: `
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = "pagina-login.html";
+                window.location.href = "login-index.php";
             } else {
                 alert("Error al cerrar sesión");
             }

@@ -20,4 +20,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         echo "Por favor, completa todos los campos requeridos.";
     }
 }
-?>
