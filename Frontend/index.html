@@ -12,35 +12,26 @@
             <div class="side-bar">
                 <aside>
                     <nav>
-                        <div>
-                            <button id="toggleButton">=</button>
-                            <ul id="itemlist" style="display: none;">
-                                <li><button>Clases</button></li>
-                                <li><button>Ver Progreso</button></li>
-                                <li><button>Cerrar Sesión</button></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <a class="links-students" href="block.html"><span>Bloques</span></a>
-                            <a class="links-students" href="profile.html"><span>Perfil</span></a>
-                            <a class="links-students" href="#"><span>Regresar</span></a>
+                        <div id="buttonContainer">
+                            <button id="btn-perfil" class="links-students">Perfil</button>
+                            <button id="btn-regresar" class="links-students">Volver</button>
+                            <button id="btn-cerrar-sesion" class="links-students logout_button">Cerrar Sesión</button>
                         </div>
                     </nav>
                 </aside>
             </div>
-        <div style="align-content: center;" >
+        <div style="align-content: center;">
             <main>
-                <div class="alinear-x" >
-                    <div class="asig-container-btn alinear-y" >
+                <div class="alinear-x">
+                    <div class="asig-container-btn alinear-y">
                         <nav>
-                            <ul class="style-list" >
+                            <ul class="style-list">
                             </ul>
                         </nav>
                     </div>
-                    <div class="alinear-y vertical-area ">
+                    <div class="alinear-y vertical-area">
                         <div class="display-text-area">
-                            <div class="texts-display" >
+                            <div class="texts-display">
                                 <!--Aqui va el texto cargado del js-->
                             </div>
                             <div class="alinear-y">
@@ -48,25 +39,25 @@
                             </div>
                         </div>
                         <div>
-                            <div class="display-instruct-area" >
-                                <img class="img-hands" id="current-hand-image" src="../assets/images/hands/hand-l.jpeg" >
-                                <div class="keyboard" >
-                                    <span class="key" >A</span>
+                            <div class="display-instruct-area">
+                                <img class="img-hands" id="current-hand-image" src="../assets/images/hands/hand-l.jpeg">
+                                <div class="keyboard">
+                                    <span class="key">A</span>
                                 </div>
-                                <img  class="img-hands" id="hand-rigth" src="../assets/images/hands/hand-r.jpeg"  >
+                                <img class="img-hands" id="hand-rigth" src="../assets/images/hands/hand-r.jpeg">
                             </div>
                         </div>
                     </div>
-                    <div class="alinear-y stats-display" >
-                        <p>Plabras faltantes</p>
+                    <div class="alinear-y stats-display">
+                        <p>Palabras faltantes</p>
                         <p>Palabras por minuto</p>
-                        <p>Palabras Erronias</p>
-                        <p>tiempo</p>
-                        <div class="btn-contain-asig" >
-                            <button id="btn-Start" >Iniciar</button>
-                            <button id="btn-Resume" >Pausar</button>
-                            <button id="btn-Restart" >Reiniciar</button>
-                            <button id="btn-Finish" >Terminar</button>
+                        <p>Palabras Erróneas</p>
+                        <p>Tiempo</p>
+                        <div class="btn-contain-asig">
+                            <button id="btn-Start">Iniciar</button>
+                            <button id="btn-Resume">Pausar</button>
+                            <button id="btn-Restart">Reiniciar</button>
+                            <button id="btn-Finish">Terminar</button>
                         </div>
                     </div>
 
@@ -74,6 +65,6 @@
             </main>
         </div>
     </div>
-    <script src="function.js" ></script>
+    <script src="function.js"></script>
 </body>
 </html>

@@ -15,12 +15,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0755, true);
     }
-    $target_file = $target_dir . basename($_FILES["archivo"]["name"]);
+
+    // Obtener la información del archivo
+    $original_file_name = pathinfo($_FILES["archivo"]["name"], PATHINFO_FILENAME);
+    $original_file_extension = pathinfo($_FILES["archivo"]["name"], PATHINFO_EXTENSION);
+    $new_file_name = $original_file_name . '_' . uniqid() . '.' . $original_file_extension; // Crear un nombre único para el archivo
+    $target_file = $target_dir . $new_file_name;
+
     if (move_uploaded_file($_FILES["archivo"]["tmp_name"], $target_file)) {
-        $consulta = "INSERT INTO asig (name, description, time, document_url, visibility, id_user, date) VALUES (:name, :description, :time, :document_url, :visibility, :id_user, NOW())";
+        $consulta = "INSERT INTO asig (name, description, time, document_url, visibility, id_user, file_name, date) VALUES (:name, :description, :time, :document_url, :visibility, :id_user, :file_name, NOW())";
         $stmt = $pdo->prepare($consulta);
 
-        if ($stmt->execute([':name' => $name, ':description' => $description, ':time' => $time, ':document_url' => $target_file, ':visibility' => $visibility, ':id_user' => $id_user])) {
+        if ($stmt->execute([
+            ':name' => $name,
+            ':description' => $description,
+            ':time' => $time,
+            ':document_url' => $target_file,
+            ':visibility' => $visibility,
+            ':id_user' => $id_user,
+            ':file_name' => $new_file_name
+        ])) {
             // Insertar en la tabla block_asig para relacionar la asignación con el bloque
             $id_asig = $pdo->lastInsertId();
             $consulta_block_asig = "INSERT INTO block_asig (id_block, id_asig, id_user) VALUES (:block_id, :asig_id, :id_user)";

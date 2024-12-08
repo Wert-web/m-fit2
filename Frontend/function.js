@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const restartButton = document.getElementById("btn-Restart"); // Botón Reiniciar
 
     // Variables para la práctica de mecanografía
+    textDisplay.innerHTML = "";
+
     let estado = null; // Estado inicial
     let words = [];
     let currentWordIndex = 0;
@@ -36,10 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Muestra el texto completo y resalta la palabra actual
     function displayFullText() {
-        textDisplay.innerHTML = words
-            .map((word, index) => `<span ${index === 0 ? 'class="highlight"' : ""}>${word}</span>`)
-            .join(" ");
-        updateKeyDisplay();
+        if (words.length > 0) {
+            textDisplay.innerHTML = words
+                .map((word, index) => `<span ${index === 0 ? 'class="highlight"' : ""}>${word}</span>`)
+                .join(" ");
+            updateKeyDisplay();
+        } else {
+            textDisplay.innerHTML = ""; // No mostrar nada si no hay texto
+        }
     }
 
     // Cambiar estado y actualizar la interfaz
@@ -130,8 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
         errors = 0;
         totalWords = 0;
         inputArea.value = "";
+        textDisplay.innerHTML = ""; // Limpiar el contenido de textDisplay
         timeDisplay.textContent = `Tiempo restante: 60 s`;
-        displayFullText();
         updateStats();
         pauseButton.textContent = "Pausar";
     }
@@ -172,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
         updateStats(); // Actualizar estadísticas
     });
-    
 
     // Actualizar la tecla que debe presionarse
     function updateKeyDisplay() {
@@ -180,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentChar = currentWord[currentCharIndex] || ""; // Carácter actual
         keySpan.textContent = currentChar.toUpperCase(); // Mostrar la letra actual
     }
-    
 
     // Actualizar estadísticas de la práctica
     function updateStats() {
@@ -190,26 +194,11 @@ document.addEventListener("DOMContentLoaded", function () {
         wpmDisplay.textContent = `Palabras por minuto: ${isNaN(wpm) ? 0 : wpm}`;
     }
 
-    // Cargar el texto inicial
-    loadTextFromFile();
+//-------------------------------------//
 
-    // Estado inicial
-    cambiarEstado("inactivo");
+    // Cargar el texto inicial vacío para evitar mostrar nada inicialmente
+    textDisplay.innerHTML = "";
 
-const itemList = document.getElementById('itemlist');
-const toggleButton = document.getElementById("toggleButton");
-
-        // Agregar evento al botón
-        toggleButton.addEventListener("click", function () {
-            // Alternar el estilo de visibilidad
-            if (itemList.style.display === "none") {
-                 itemList.style.display = "block"; // Mostrar el menú
-            } else {
-                itemList.style.display = "none"; // Ocultar el menú
-            }
-            });
-
-//hasta aqui jala:
 
     const currentHandImage = document.getElementById("current-hand-image"); // Imagen de la posición de la mano actual
     
@@ -335,7 +324,6 @@ if (blockId) {
     .catch(error => console.error("Error al obtener las asignaciones:", error));
 }
 
-// Función para generar los botones de asignación
 function populateAsigButtons(asigs) {
     asigContainer.innerHTML = "";
     asigs.forEach(asig => {
@@ -345,13 +333,58 @@ function populateAsigButtons(asigs) {
 
         // Asociar evento al botón
         button.addEventListener("click", () => {
-            resetPractice(); // Reiniciar práctica antes de cargar nuevo texto
-            const filePath = `../texts/${asig.file_name}`; // Usar file_name para la ruta
-            loadTextFromFile(filePath);
-        });        
+            if (!asig.file_name) {
+                alert("No hay un archivo asociado a esta asignación.");
+                return;
+            }
+
+            resetPractice(); // Reiniciar la práctica antes de cargar el nuevo texto
+            const filePath = `/uploads/${asig.file_name}`; // Ruta al archivo desde el servidor
+            console.log("Cargando archivo desde:", filePath); // Depuración
+            loadTextFromFile(filePath); // Cargar el texto
+        });
 
         li.appendChild(button);
         asigContainer.appendChild(li);
     });
 }
+
+//hasta aqui jala:
+
+const profileButton = document.getElementById("btn-perfil");
+const backButton = document.getElementById("btn-regresar");
+const logoutButton = document.getElementById("btn-cerrar-sesion");
+
+profileButton.addEventListener("click", function () {
+    window.location.href = "profile.html"; // Redirige a la página de perfil
 });
+
+backButton.addEventListener("click", function () {
+    window.location.href = "index-student.html"; // Cambia "index-student.html" a la URL de la página a la que quieres regresar
+});
+
+logoutButton.addEventListener("click", function () {
+    handleLogout();
+});
+
+function handleLogout() {
+    fetch('../backend/php/logout.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = "login-index.php";
+        } else {
+            alert("Error al cerrar sesión");
+        }
+    })
+    .catch(error => console.error("Error al cerrar sesión:", error));
+}
+
+});
+
+
